@@ -1,0 +1,200 @@
+<script type="text/template" id="inventory-items-template">
+  [% var care_type=3, invoice_type=2, warranty_type=1, provenance_type=44; %]
+
+    [% if (items.length > 0) {                              %]
+    [% var page = items[0]['page'] || 1                     %]
+    [% var totalPages = items[0].total_pages || 1        %]
+    [% var total_count = items[0].total_count || 1          %]
+    [% var hasMoreItems = page < totalPages;                %]
+
+      <div class="row">
+        <h4 class="col-xs-4">
+          Found [%= total_count %] item[%= total_count != 1 ? 's' : ''%]
+        </h4>
+      </div>
+
+      <!--Paging top-->
+      <div class="row text-center">
+        <div class="col-xs-12">
+          <ul class="pager">
+            <li class='previous [%= page == 1 ? "disabled" : "" %]'>
+              <a class='[%= page != 1 ? "btn_prev" : "" %]' role="button">Previous</a></li>
+            <li class="active">[%= page %] / [%= totalPages%]</li>
+            <li class='next  [%= !hasMoreItems ? "disabled" : "" %]'>
+              <a class='[%= hasMoreItems ? "btn_next" : "" %]' role="button">Next</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row box">
+        [% _.each(items, function(item) { %]
+        <div class="col-xs-12 col-sm-6 col-md-4">
+          <div class="inventory-tile text-center">
+            [% if (item.inventory_images && item.inventory_images.length > 0) { %]
+            <a href="/trade/inventory-items/[%= item.id %]">
+              <img src="[%= item.inventory_images[0].image.thumbnail.url %]" class="item-tile-img"/>
+            </a>
+            [% } else { %]
+            <!--No image-->
+            <a href="/trade/inventory-items/[%= item.id %]">
+              <img src="<%= asset_path("not_available.png") %>" class="item-tile-img"/>
+            </a>
+            [% } %]
+            <div class="item-title">
+              <a href="/trade/inventory-items/[%= item.id %]">[%= item.title %]</a>
+            </div>
+
+            <!--Documents-->
+            <div class="documents">
+              <ul>
+                <li>
+                  <div class="row">
+                    <div class="col-xs-3">
+                      <span>Care</span>
+                    </div>
+                    <div class="col-xs-1">
+                      <a class="btn-new-document" href="#" data-no-turbolink="true">
+                        <img src="<%= asset_path("plus-button.png") %>"/>
+                      </a>
+                    </div>
+
+                    <div class="documents-list col-xs-7">
+                      [% var index = 0; %]
+                      [% item.inventory_documents.every(function(doc) { %]
+                        [% if (doc.inventory_document_type_id == care_type) { %]
+                            [% index ++;%]
+                            [% if (index <= 3 ) { %]
+                              <a href="[%= doc.file.url %]" target="_blank" title="[%= doc.name %]">
+                                <img src="<%= asset_path("doc.png") %>" class="doc-img"/>
+                              </a>
+                            [% } else { %]
+                                <a href="/trade/inventory-items/[%= item.id %]" target="_blank" title="View more docs">...</a>
+                                [% return; %]
+                            [% } %]
+                        [% } %]
+                        [% return true; %]
+                      [% }); %]
+                    </div>
+                  </div>
+                </li>
+
+                <li>
+                  <div class="row">
+                    <div class="col-xs-3">
+                      <span>Invoice</span>
+                    </div>
+                    <div class="col-xs-1">
+                      <a class="btn-new-document" href="#" data-no-turbolink="true">
+                        <img src="<%= asset_path("plus-button.png") %>"/>
+                      </a>
+                    </div>
+
+                    <div class="documents-list col-xs-7">
+                      [% var index = 0; %]
+                      [% item.inventory_documents.every(function(doc) { %]
+                        [% if (doc.inventory_document_type_id == invoice_type) { %]
+                            [% index ++;%]
+                            [% if (index <= 3 ) { %]
+                              <a href="[%= doc.file.url %]" target="_blank" title="[%= doc.name %]">
+                                <img src="<%= asset_path("doc.png") %>" class="doc-img"/>
+                              </a>
+                            [% } else { %]
+                             <a href="/trade/inventory-items/[%= item.id %]" target="_blank" title="View more docs">...</a>
+                                [% return; %]
+                            [% } %]
+                        [% } %]
+                        [% return true; %]
+                      [% }); %]
+                    </div>
+                  </div>
+                </li>
+
+                <li>
+                  <div class="row">
+                    <div class="col-xs-3">
+                      <span>Warranty</span>
+                    </div>
+                    <div class="col-xs-1" >
+                      <a class="btn-new-document" href="#" data-no-turbolink="true">
+                        <img src="<%= asset_path("plus-button.png") %>"/>
+                      </a>
+                    </div>
+
+                    <div class="documents-list col-xs-7">
+                      [% var index = 0; %]
+                      [% item.inventory_documents.every(function(doc) { %]
+                          [% if (doc.inventory_document_type_id == warranty_type) { %]
+                              [% index ++;%]
+                              [% if (index <= 3 ) { %]
+                                  <a href="[%= doc.file.url %]" target="_blank" title="[%= doc.name %]">
+                                    <img src="<%= asset_path("doc.png") %>" class="doc-img"/>
+                                  </a>
+                              [% } else { %]
+                                  <a href="/trade/inventory-items/[%= item.id %]" target="_blank" title="View more docs">...</a>
+                                  [% return; %]
+                              [% } %]
+                          [% } %]
+                          [% return true; %]
+                      [% }); %]
+                    </div>
+                  </div>
+                </li>
+
+                <li>
+                  <div class="row">
+                    <div class="col-xs-3">
+                      <span>Provenance</span>
+                    </div>
+                    <div class="col-xs-1">
+                      <a class="btn-new-document" href="#" data-no-turbolink="true">
+                        <img src="<%= asset_path("plus-button.png") %>"/>
+                      </a>
+                    </div>
+
+                    <div class="documents-list col-xs-7">
+                      [% var index = 0; %]
+                      [% item.inventory_documents.every(function(doc) { %]
+                          [% if (doc.inventory_document_type_id == provenance_type) { %]
+                              [% index ++;%]
+                              [% if (index <= 3 ) { %]
+                                  <a href="[%= doc.file.url %]" target="_blank" title="[%= doc.name %]">
+                                    <img src="<%= asset_path("doc.png") %>" class="doc-img"/>
+                                  </a>
+                              [% } else { %]
+                                  <a href="/trade/inventory-items/[%= item.id %]" target="_blank" title="View more docs">...</a>
+                                  [% return; %]
+                              [% } %]
+                          [% } %]
+                          [% return true; %]
+                      [% }); %]
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <!-- End documents-->
+          </div>
+        </div>
+        [% }); %]
+      </div>
+
+      <!--Paging bottom-->
+      <div class="row text-center">
+        <div class="col-xs-12">
+          <ul class="pager">
+            <li class='previous [%= page == 1 ? "disabled" : "" %]'>
+              <a class='[%= page != 1 ? "btn_prev" : "" %]' role="button">Previous</a></li>
+            <li class="active">[%= page %] / [%= totalPages%]</li>
+            <li class='next  [%= !hasMoreItems ? "disabled" : "" %]'>
+              <a class='[%= hasMoreItems ? "btn_next" : "" %]' role="button">Next</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+  [% } else { %]
+  <div class="col-xs-12 text-center inventory-no-items">
+    No items found.
+  </div>
+  [% } %]
+</script>

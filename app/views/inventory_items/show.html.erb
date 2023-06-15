@@ -1,0 +1,207 @@
+<script type="text/template" id="show-inventory-item-template">
+  <div class="col-xs-12 show-inventory-item-container">
+    <div class="row">
+      <div class="col-md-6 col-xs-12" id="item-show-images-container"></div>
+      <div class="col-md-offset-1 col-md-5 col-xs-12 text-right" id="show-item-title-container"></div>
+    </div>
+  </div>
+
+  <div class="page-overlay" id="page-overlay">
+    <img src="<%= asset_url('spinner.gif') %>" border="0" class="progress-spinner"/>
+  </div>
+</script>
+
+<script type="text/template" id="show-item-title-template">
+  <div class="col-xs-12 text-right">
+    <a class="btn btn-default btn-sm" data-id="[%= id %]" target="_blank" href="/trade/inventory-items/[%= id %]/edit"
+       data-no-turbolink="true"><i class="glyphicon glyphicon-edit"></i>&nbsp;EDIT ITEM
+    </a>
+  </div>
+
+  <div class="col-xs-12">
+    <h3>[%= title ? title : "" %]</h3>
+  </div>
+
+  [% if ( description && description.length > 0 ){ %]
+    <div class="col-xs-12">
+      <small>
+        [%= description.replace(/(?:\r\n|\r|\n)/g, '<br/>') %]
+      </small>
+    </div>
+  [% } %]
+
+  <!--Materials-->
+  [% if (inventory_materials.length > 0) {              %]
+    <div class="col-xs-12" style="padding-top: 30px">
+        <strong>Materials</strong>
+    </div>
+  [% _.each(inventory_materials, function(m) {          %]
+    <div class="col-xs-12 doc_item">
+  [%= m.name                                            %]
+    </div>
+  [% })                                                 %]
+  [% }                                                  %]
+
+ <!-- Condition-->
+  [% if (inventory_conditions.length > 0){ %]
+  <div class="col-xs-12" style="padding-top: 30px">
+    <strong>Condition</strong>
+  </div>
+  [% for (i in inventory_conditions.models) { var c = inventory_conditions.models[i]; %]
+  <div class="col-xs-12 doc_item">
+    [%= c.get("name") %]
+    [% if ( condition_description && condition_description.length > 0){ %]
+        <div>
+          <small>
+            [%= condition_description.replace(/(?:\r\n|\r|\n)/g, '<br/>') %]
+          </small>
+        </div>
+    [% } %]
+  </div>
+  [% } } %]
+
+  <!--Period-->
+  [% if (inventory_periods.length > 0){ %]
+  <div class="col-xs-12" style="padding-top: 30px">
+    <strong>Period</strong>
+  </div>
+  [% for (i in inventory_periods.models) { var c = inventory_periods.models[i]; %]
+  <div class="col-xs-12 doc_item">
+    [%= c.get("name") %]
+    [% if ( period_description && period_description.length > 0){ %]
+    <div>
+      <small>
+        [%= period_description.replace(/(?:\r\n|\r|\n)/g, '<br/>') %]
+      </small>
+    </div>
+    [% } %]
+  </div>
+  [% } } %]
+
+  [% if (care && care.length > 0){ %]
+    <div class="col-xs-12" style="padding-top:20px;">
+    <strong>Care details</strong>
+    </div>
+    <div class="col-xs-12">
+    [%= care.replace(/(?:\r\n|\r|\n)/g, '<br/>') %]
+    </div>
+  [% } %]
+
+  [% if (inventory_care_docs.length > 0){ %]
+    <div class="col-xs-12" style="padding-top:30px;">
+        <strong>Care documents</strong>
+    </div>
+
+  [% for (i in inventory_care_docs.models) { var doc = inventory_care_docs.models[i]; %]
+    <div class="col-xs-12 doc_item">
+        <a href="[%= doc.get('file').url %]" target="_blank"><i class="glyphicon glyphicon-file"></i>&nbsp;[%= doc.get("name") %]</a>
+    </div>
+  [% } } %]
+
+  [% if (inventory_invoice_docs.length > 0){ %]
+      <div class="col-xs-12" style="padding-top: 30px">
+        <strong>Invoice documents</strong>
+      </div>
+  [% for (i in inventory_invoice_docs.models) { var doc = inventory_invoice_docs.models[i]; %]
+      <div class="col-xs-12 doc_item">
+        <a href="[%= doc.get('file').url %]" target="_blank"><i class="glyphicon glyphicon-file"></i>&nbsp;[%= doc.get("name") %]</a>
+      </div>
+  [% } } %]
+
+  [% if (inventory_warranty_docs.length > 0){ %]
+      <div class="col-xs-12" style="padding-top:30px;">
+        <strong>Warranty documents</strong>
+      </div>
+  [% for (i in inventory_warranty_docs.models) { var doc = inventory_warranty_docs.models[i]; %]
+      <div class="col-xs-12 doc_item">
+        <a href="[%= doc.get('file').url %]" target="_blank"><i class="glyphicon glyphicon-file"></i>&nbsp;[%= doc.get("name") %]</a>
+      </div>
+  [% } } %]
+
+  <!--Provenance-->
+  [% if (inventory_provenance_docs.length > 0) {                            %]
+  <div class="col-xs-12" style="padding-top:30px;">
+    <strong>Provenance details</strong>
+  </div>
+  [% if (provenance_description && provenance_description.length > 0) {     %]
+  <div class="col-xs-12 doc_item">
+      <small>
+        [%= provenance_description.replace(/(?:\r\n|\r|\n)/g, '<br/>')      %]
+      </small>
+  </div>
+  [% }                                                                      %]
+
+  [% _.each(inventory_provenance_docs, function(doc) {                      %]
+  <div class="col-xs-12 doc_item">
+    <a href="[%= doc.file.url %]" target="_blank">
+      <i class="glyphicon glyphicon-file"></i>&nbsp;[%= doc.name %]</a>
+  </div>
+  [% })                                                                     %]
+  [% }                                                                      %]
+</script>
+
+<script type="text/template" id="item-show-images-template">
+  <div class="col-xs-12 main-item-image text-left">
+    [% if (items.length > 0) { %]
+    [% _.each(items, function(item) { %]
+    [% if (item.selected == true) { %]
+        <img src="[%= item.image.medium.url %]"/>
+    [% } %]
+    [% }); %]
+    [% } else {%]
+        <img src="<%= asset_path("not_available.png") %>" class="item-tile-img"/>
+    [% } %]
+  </div>
+
+  [% if (items.length > 0) { %]
+  <div class="col-xs-12 text-left">
+    [% _.each(items, function(item) { %]
+    <div class="show-item-thumbnail">
+      <img src="[%= item.image.thumbnail.url %]" class="item-thumbnail-img" data-id="[%= item.id %]"/>
+    </div>
+    [% }); %]
+  </div>
+  [% } %]
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        var Models = HousePad.TradeApp.module("Models");
+        var inventory_item = new Models.InventoryItem(<%= @item.to_json.html_safe %>);
+        var images_collection = new Models.InventoryImages(inventory_item.get("inventory_images"));
+        inventory_item.set("inventory_images", images_collection);
+
+        var categories_collection = new Models.InventoryCategories(inventory_item.get("inventory_categories"));
+        inventory_item.set("inventory_categories", categories_collection);
+
+        var conditions_collection = new Models.InventoryConditions(inventory_item.get("inventory_conditions"));
+        inventory_item.set("inventory_conditions", conditions_collection);
+
+        var periods_collection = new Models.InventoryPeriods(inventory_item.get("inventory_periods"));
+        inventory_item.set("inventory_periods", periods_collection);
+
+        var care_docs = new Models.InventoryDocuments(inventory_item.get("inventory_care_docs"));
+        inventory_item.set("inventory_care_docs", care_docs);
+
+        var warranty_docs = new Models.InventoryDocuments(inventory_item.get("inventory_warranty_docs"));
+        inventory_item.set("inventory_warranty_docs", warranty_docs);
+
+        var invoice_docs = new Models.InventoryDocuments(inventory_item.get("inventory_invoice_docs"));
+        inventory_item.set("inventory_invoice_docs", invoice_docs);
+
+        // Prepare the popup
+        var init_data = {
+            inventory_item: inventory_item,
+            current_user : get_current_user(<%= @user.to_json.html_safe %>)
+        };
+
+        HousePad.TradeApp.start(init_data);
+
+        //Start Rooms Inventory view item module
+        HousePad.TradeApp.module("Inventory.Item.Show").start();
+
+        //Start routing
+        Backbone.history.start({pushState: true, hashChange: false, root: "/trade/"});
+    });
+
+</script>

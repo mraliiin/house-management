@@ -1,0 +1,95 @@
+<script type="text/template" id="registration-template">
+  <div class="col-xs-12">
+    <div class="page-header">
+      <h1>HousePad Trade Registration</h1>
+    </div>
+  </div>
+
+  <div class="col-md-8 col-md-offset-2 col-xs-12">
+
+    <form class="form form-horizontal" role="form" id="registration-form">
+
+      <div class="form-group">
+        <%= label_tag :salutation, nil, class: "col-xs-12 col-sm-4 control-label" %>
+        <div class="col-xs-12 col-sm-8">
+          <%= select_tag :salutation, options_for_select({"Mr." => "Mr.", "Mrs." => "Mrs.", "Ms." => "Ms.", "Miss" => "Miss"}), class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= label_tag :first_name, nil, class: "col-xs-12 col-sm-4 control-label" %>
+        <div class="col-xs-12 col-sm-8">
+          <%= text_field_tag :first_name, nil, class: "form-control", placeholder: "First name" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= label_tag :last_name, nil, class: "col-xs-12 col-sm-4 control-label" %>
+        <div class="col-xs-12 col-sm-8">
+          <%= text_field_tag :last_name, nil, class: "form-control", placeholder: "Last name" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= label_tag :company_name, nil, class: "col-xs-12 col-sm-4 control-label" %>
+        <div class="col-xs-12 col-sm-8">
+          <%= text_field_tag :company_name, nil, class: "form-control", placeholder: "Company name" %>
+        </div>
+      </div>
+
+      <div class="form-group" id="email-group">
+        <%= label_tag :email, nil, class: "col-xs-12 col-sm-4 control-label" %>
+        <div class="col-xs-12 col-sm-8">
+          <%= text_field_tag :email, nil, class: "form-control", placeholder: "Email" %>
+        </div>
+        <span id="email-help" class="help-block col-sm-8 col-sm-offset-4"></span>
+      </div>
+
+      <div class="form-group" id="phone-group">
+        <%= label_tag :phone, "Cell phone", class: "col-xs-12 col-sm-4 control-label" %>
+        <div class="col-xs-12 col-sm-8">
+          <%= text_field_tag :phone, nil, class: "form-control", placeholder: "Cell phone", autocomplete: "off", "data-toggle" => "tooltip", "data-placement" => "bottom", title: "Used for communicating with you and for Housepad App notifications" %>
+        </div>
+        <span id="phone-help" class="help-block col-sm-8 col-sm-offset-4"></span>
+      </div>
+
+      <div class="form-group" id="password-group">
+        <%= label_tag :password, nil, class: "col-xs-12 col-sm-4 control-label" %>
+        <div class="col-xs-12 col-sm-8">
+          <%= password_field_tag :password, nil, class: "form-control", placeholder: "Password", autocomplete: "off", "data-toggle" => "tooltip", "data-placement" => "bottom", title: "Must be at least 6 characters" %>
+        </div>
+        <span id="password-help" class="help-block col-sm-8 col-sm-offset-4"></span>
+      </div>
+
+      <div class="checkbox" id="agree-terms-group">
+        <label class="col-xs-12 col-sm-8 col-sm-offset-4">
+          <input type="checkbox" value="Y" name="agree_terms" id="agree_terms"/>
+          I agree to the <a href="/trade/trade_account_terms.html">HousePad Trade Program Terms of Use Agreement</a>
+        </label>
+        <span id="agree-terms-help" class="help-block col-sm-8 col-sm-offset-4"></span>
+      </div>
+
+
+      <div class="form-group" style="padding-top:30px; display: none;" id="registration-feedback-container">
+        <div class="alert" id="registration-feedback"></div>
+      </div>
+
+      <div class="form-group" style="margin-top:20px;">
+        <div class="col-sm-8 col-lg-offset-4">
+          <%= submit_tag "Register", class: "btn btn-large btn-primary", id: "btn-register" %>
+          <%= button_tag "Login", class: "btn btn-large btn-default", id: "btn-login" %>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+</script>
+
+<script type="text/javascript">
+    $(function(){
+        HousePad.TradeApp.start();
+        HousePad.TradeApp.module("Registration").start();
+    });
+
+</script>

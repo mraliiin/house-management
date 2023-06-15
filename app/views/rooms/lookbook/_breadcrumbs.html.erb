@@ -1,0 +1,69 @@
+<script type="text/template" id="breadcrumbs-template">
+  <div class="row">
+    <div class="col-xs-12 breadcrumbs">
+      <div class="col-xs-12">
+        <div class="breadcrumbs-root btn-group">
+          <button class="btn btn-link">
+            <a href="/trade/clients" data-no-turbolink="true">Clients</a>
+          </button>
+        </div>
+        <!--Houses-->
+        <div class="btn-group">
+          <a class="btn btn-link btn-crumb" href="/trade/clients/[%= items.selected_client.id %]/projects/[%= items.selected_house.id %]" data-no-turbolink="true">
+            [%= items.selected_house.name %]
+          </a>
+          <button type="button" class="btn btn-crumb dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            [% _.each(items.selected_client.houses, function(item) { %]
+            <li>
+              <a href="/trade/inventory?house=[%= item.id %]" data-no-turbolink="true">
+                [%= item.name %]
+              </a>
+            </li>
+            [% }); %]
+          </ul>
+        </div>
+
+        <!--Rooms-->
+        <div class="btn-group">
+          <a class="btn btn-link btn-crumb" href="/trade/inventory?project=[%= items.selected_house.id %]&room=[%=items.selected_house.selected_room.id%]" data-no-turbolink="true">
+            [%= items.selected_house.selected_room.title %]
+          </a>
+          <button type="button" class="btn btn-crumb dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            [% _.each(items.selected_house.rooms, function(item) { %]
+            <li>
+              <a href="/trade/inventory?project=[%= items.selected_house.id %]&room=[%=item.id%]" data-no-turbolink="true">
+                [%= item.title %]
+              </a>
+            </li>
+            [% }); %]
+          </ul>
+        </div>
+
+        <!--Lookbook-->
+        [% if (items.selected_house && items.selected_house.selected_room) {    %]
+        [% var house_id = items.selected_house.id;                              %]
+        [% var room_id = items.selected_house.selected_room.id;                 %]
+        <div class="btn-group">
+          <a class="btn btn-link btn-crumb" href="/trade/clients/[%= items.selected_client.id %]/projects/[%= items.selected_house.id %]" data-no-turbolink="true">
+            Lookbook
+          </a>
+          <button type="button" class="btn btn-crumb dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="/trade/projects/[%= house_id %]/rooms/[%= room_id %]/lookbook" data-no-turbolink="true">Lookbook</a>
+            </li>
+            <li>
+              <a href="/trade/inventory?project=[%= house_id %]&room=[%= room_id %]" data-no-turbolink="true">Inventory</a>
+            </li>
+            <li>
+              <a href="/trade/projects/[%= house_id %]/rooms/[%= room_id %]/details" data-no-turbolink="true">Details</a>
+            </li>
+          </ul>
+        </div>
+        [% }                                                                    %]
+      </div>
+    </div>
+  </div>
+</script>

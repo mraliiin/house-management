@@ -1,0 +1,62 @@
+<script type="text/template" id="new-client-template-modal">
+  <div class="modal-content">
+    <form role="form" class="form form-horizontal" id="form-new-client">
+      <div class="modal-header">
+        <span class="modal-title">[%= (typeof(id) != null ? "EDIT CLIENT" : "NEW CLIENT") %]</span>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="<%= asset_path("cross.png")%>"/></button>
+      </div>
+      <div class="modal-body">
+        <div class="col-sm-8 col-sm-offset-2">
+          <div class="form-group">
+            <div class="col-xs-12">
+              <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name" value="[%= (typeof(first_name) == 'string' ? first_name : '') %]">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-12">
+              <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" value="[%= typeof(last_name) == 'string' ? last_name : ''%]">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-xs-12">
+              <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="[%= (typeof(email) == 'string' ? email : '') %]">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-xs-12">
+              <input type="phone" class="form-control" id="phone" name="phone" placeholder="Phone" value="[%= (typeof(phone) == 'string' ? phone : '') %]">
+            </div>
+          </div>
+
+          <!--Feedback-->
+          <div class="form-group" id="new-client-progress" style="display:none;">
+            <div class="col-xs-12 text-center">
+              <img src="<%= asset_url('spinner.gif') %>" border="0" class="progress-spinner"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-xs-12 text-left">
+              <div class="alert" id="new-client-feedback"></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-xs-12 col-sm-6 text-left">
+            <button type="button" class="btn btn-default col-xs-12 col-sm-4" data-dismiss="modal" aria-hidden="true">CANCEL</button>
+          </div>
+          <div class="col-xs-12 col-sm-6 text-right">
+            <button type="submit" class="btn btn-primary col-xs-12 col-sm-4 pull-right" id="btn-save-new-client">SAVE</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</script>
+

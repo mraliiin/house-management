@@ -1,0 +1,73 @@
+<script type="text/template" id="inventory-filters-template">
+  [% var selected_status = items.selected_status || 'all'%]
+  [% var doc_type = items.doc_type || 'all' %]
+  [% var disabled_button = items.current.house_id == '' || items.current.room_id == '' %]
+
+  <div id="inventory-filters" class="col-xs-9">
+    <div>
+     <span>
+         <label>Item status:</label>
+      </span>
+      <span>
+        <input type="radio" id="all" name="item.status"
+               [%= selected_status == "all" ? "checked='checked'" : "" %] value="all"/> All
+      </span>
+      <span>
+        <input type="radio" id="work_in_progress" name="item.status"
+               [%= selected_status == "new" ? "checked='checked'" : "" %] value="new"/> Work In Progress
+      </span>
+      <span>
+        <input type="radio" id="active" name="item.status"
+               [%= selected_status == "active" ? "checked='checked'" : "" %] value="active"/> Active
+      </span>
+       <span>
+        <input type="radio" id="ddr_pending" name="item.status"
+               [%= selected_status == "pending" ? "checked='checked'" : "" %] value="pending"/> DRR Pending
+      </span>
+      <span>
+        <input type="radio" id="ddr_completed" name="item.status"
+               [%= selected_status == "completed" ? "checked='checked'" : "" %] value="completed"/> DRR Completed
+      </span>
+    </div>
+
+    <div>
+       <span>
+         <label>Document Type:</label>
+      </span>
+      <span>
+        <input type="radio" id="all" name="item.doc_type"
+               [%= doc_type == "all" ? "checked='checked'" : "" %] value="all"/> All
+      </span>
+      <span>
+        <input type="radio" id="care" name="item.doc_type"
+               [%= doc_type == "3" ? "checked='checked'" : "" %] value="3"/> Care
+      </span>
+      <span>
+        <input type="radio" id="invoice" name="item.doc_type"
+               [%= doc_type == "2" ? "checked='checked'" : "" %] value="2"/> Invoice
+      </span>
+      <span>
+        <input type="radio" id="warranty_info" name="item.doc_type"
+               [%= doc_type == "1" ? "checked='checked'" : "" %] value="1"/> Warranty
+      </span>
+       <span>
+        <input type="radio" id="provenance" name="item.doc_type"
+               [%= doc_type == "provenance" ? "checked='checked'" : "" %] value="provenance"/> Provenance
+      </span>
+    </div>
+  </div>
+
+  <!--New item button-->
+  <div class="col-xs-3 text-right">
+    [% if (!disabled_button) { %]
+    <a class="btn btn-default btn-sm housepad-btn" target="_blank"
+       href="/trade/inventory-items/new?project=[%=items.current.house_id%]&room=[%= items.current.room_id %]" data-no-turbolink="true">
+        <i class="glyphicon glyphicon-plus housepad-glyphicon-primary"></i> New Item
+    </a>
+    [% } %]
+
+    <button id="btn-new-drr" class="btn btn-default btn-sm housepad-btn" [%= disabled_button ? "disabled='disabled'" : ''%]>
+        <i class="glyphicon glyphicon-plus housepad-glyphicon-primary"></i> New DRR
+    </button>
+  </div>
+</script>

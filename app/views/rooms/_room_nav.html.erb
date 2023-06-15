@@ -1,0 +1,14 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="<%= @room_nav == "lookbook" ? "active" :"" %>"><%= link_to "Lookbook", room_lookbook_path(house_id: params[:house_id], id: params[:id]) %></li>
+        <li class="<%= @room_nav == "inventory" ? "active" :"" %>"><%= link_to "Inventory", room_inventory_path(house_id: params[:house_id], id: params[:id]) %></li>
+        <li class="<%= @room_nav == "details" ? "active" :"" %>"><%= link_to "Details", room_details_path(house_id: params[:house_id], id: params[:id]) %></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>

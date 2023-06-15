@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <title>HousepadTrade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<script type="text/template" id="app-layout-template">
+  <div class="col-xs-12" id="header-container"></div>
+  <div class="col-xs-12" id="main-panel-container"></div>
+  <div class="col-xs-12" id="footer-container"></div>
+</script>
+
+
+<script type="text/template" id="header-template">
+
+  <div class="col-md-3 col-xs-6 text-left">
+    <a href="/trade" data-no-turbolink='true'>
+      <img src="<%= asset_path("housepad-logo.png") %>" height="70px" border="0"/></a>
+  </div>
+
+
+  <div class="col-md-9 col-xs-6 text-right" id="user-info-container">
+    [% if (current_user) { %]
+    <div class="btn-group">
+      <div class="user-logo pull-left">
+        <img src='[%= current_user.avatar.url %]' aria-hidden="true" alt="user">
+      </div>
+
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        [%= current_user.first_name + " " + current_user.last_name %] <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="/trade/settings/account-details" data-no-turbolink="true">Settings</a></li>
+        <li><a href="/trade/settings/billing" data-no-turbolink="true">Billing</a></li>
+        <li class="divider"></li>
+        <li><%= link_to "Logout", :logout, method: "delete" %></li>
+      </ul>
+    </div>
+
+    [% } %]
+  </div>
+
+</script>
+
+
+<script type="text/template" id="footer-template">
+  <div class="col-xs-12 text-center">
+    &copy; 2015 HousePadApp.com
+  </div>
+</script>
+
+<script type="text/javascript">
+    function get_current_user(user_data) {
+        var Models = HousePad.TradeApp.module("Models");
+        return new Models.User({
+            id: user_data.user.id,
+            first_name: user_data.user.first_name,
+            last_name: user_data.user.last_name,
+            email: user_data.user.email,
+            phone: user_data.user.phone,
+            avatar: {
+                url: user_data.user.avatar.url ? user_data.user.avatar.url : "",
+                thumb: {
+                    url: user_data.user.avatar.thumb.url ? user_data.user.avatar.thumb.url : ""
+                }
+            }
+        });
+    }
+</script>
+
+<%= yield %>
+
+<div class="container" id="main-container"></div>
+
+</body>
+</html>
+

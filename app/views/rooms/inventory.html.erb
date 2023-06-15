@@ -1,0 +1,40 @@
+<script type="text/template" id="room-template">
+
+  <div class="col-xs-12" id="room-header-container"></div>
+
+  <div class="col-xs-12" id="room-breadcrumbs"></div>
+
+  <div class="col-xs-12" id="room-inventory-filters"></div>
+
+  <div class="col-xs-12 box" id="room-inventory-items"></div>
+</script>
+
+<%= render "room_header" %>
+
+<%= render "inventory/inventory_breadcrumbs" %>
+
+<%= render "inventory/inventory_filters" %>
+
+<%= render "inventory/inventory_items" %>
+
+<script type="text/javascript">
+    $(function(){
+        var Models = HousePad.TradeApp.module("Models");
+
+        <% HouseManagementApi::Room.include_root_in_json = false %>
+        var room = new Models.Room(<%= @room.to_json.html_safe %>);
+        room.set("inventory_items", new Models.InventoryItems(<%= @items.to_json.html_safe %>));
+
+        var clients_with_house_data = new Models.TradeClient(<%= @clients_with_house_data.to_json.html_safe %>);
+        room.set("clients_with_house_data", clients_with_house_data);
+
+        HousePad.TradeApp.start({room: room});
+
+        //Start Rooms Inventory module
+        HousePad.TradeApp.module("Rooms.Inventory").start();
+
+        //Start routing
+        Backbone.history.start({pushState: true, hashChange: false, root: "/trade/"});
+    });
+
+</script>

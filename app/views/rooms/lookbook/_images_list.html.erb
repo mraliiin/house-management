@@ -1,0 +1,52 @@
+<script type="text/template" id="room-images-template">
+  [% if (items.length > 0) { %]
+  <div id="room-images-sortable" class="col-xs-12">
+    [% _.each(items, function(image) { %]
+
+    <div class="room-image-container" data-id="[%= image.id %]">
+        [% if (image.delete_mode == true) {%]
+            <img src="<%= asset_path("cross.png") %>" class="btn-del-image" data-id="[%= image.id %]"/>
+        [% } %]
+
+      <div class="room-image-wrapper text-center">
+        <img src="[%= image.image.thumb.url %]" class="item-tile-img room-image" data-id="[%= image.id %]"/>
+      </div>
+    </div>
+    [% }); %]
+  </div>
+
+  [% } else { %]
+
+  <div class="col-xs-12 text-center">
+    There are no images for this room yet.
+  </div>
+
+  [% } %]
+
+  <div class="col-xs-12">
+    <div id="room-image-preview-template" class="file-row">
+      <!-- This is used as the file preview template -->
+      <div>
+        <span class="preview"><img class="image" data-dz-thumbnail/></span>
+      </div>
+      <div>
+        <p class="name" data-dz-name></p>
+
+        <p class="size" data-dz-size></p>
+      </div>
+      <div>
+        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-12">
+    <div class="alert" style="display:none;" role="alert" id="room-image-upload-feedback"></div>
+  </div>
+
+  <div class="col-xs-12 text-center" id="room-images-dropzone">
+    Drag images here or click to upload
+  </div>
+</script>

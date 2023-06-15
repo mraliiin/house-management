@@ -1,0 +1,56 @@
+<script type="text/template" id="item-provenance-template">
+
+  <div class="row">
+    <h5 class="col-xs-12">Description</h5>
+      <div class="col-xs-12">
+         <textarea id="item-provenance_description" name="description" class="form-control" placeholder="Enter provenance description"
+               rows="3">[%= typeof(provenance_description) != 'undefined' ? provenance_description : '' %]</textarea>
+      </div>
+  </div>
+
+  [% if (inventory_provenance_docs.length > 0) { %]
+  <div class="form-group">
+    <h5 class="col-xs-12">Provenance documents</h5>
+
+    <div class="row">
+      [% for (var i=0; i < inventory_provenance_docs.length; i++) { %]
+      [% var doc = inventory_provenance_docs.at(i); %]
+      <div class="col-xs-12 item-doc">
+        <a href="[%= doc.get('file').url %]" class="col-xs-6" target="_blank">[%= doc.get("name") %]</a>
+        <div class="delete-item-doc-container text-right col-xs-6">
+          <button class="btn btn-xs btn-danger delete-item-doc" data-id="[%= doc.id %]">DEL</button>
+        </div>
+      </div>
+      [% } %]
+    </div>
+  </div>
+  [% } %]
+
+  <!-- Provenance docs list -->
+  <div class="row">
+    <div class="col-xs-12">
+      <div id="item-provenance-preview-template" class="file-row">
+        <div>
+          <span class="preview"><img class="image" data-dz-thumbnail/></span>
+        </div>
+        <div>
+          <p class="name" data-dz-name></p>
+          <p class="size" data-dz-size></p>
+        </div>
+        <div>
+          <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12">
+      <div class="alert" style="display:none;" role="alert" id="item-provenance-upload-feedback"></div>
+    </div>
+
+    <div class="col-xs-12 text-center docDropZone dz-clickable" id="inventory-item-provenance-dropzone">
+      Drag files here or click to upload
+    </div>
+  </div>
+</script>

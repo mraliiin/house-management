@@ -1,0 +1,163 @@
+<script type="text/template" id="review-item-title-template">
+  <div class="col-xs-12">
+    <div>
+      <div class="row page-header-text">
+        <div class="col-xs-6">
+          <span class="page-title">REVIEW ITEM INFORMATION</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-12">
+      <div class="accordion">
+        <!-- Title -->
+        <h3>[%= title %]</h3>
+        <div>
+          <!--Description-->
+          [% if ( description && description.length > 0 ){ %]
+          <small> [%= description.replace(/(?:\r\n|\r|\n)/g, '<br/>') %]</small>
+          [% } %]
+        </div>
+
+        <!--Materials-->
+        [% if (inventory_materials.length > 0) { %]
+        <h3>Materials</h3>
+        <div>
+          [% _.each(inventory_materials.models, function(m) { %]
+          <div class="doc_item">
+            [%= m.get('name') %]
+          </div>
+          [% }) %]
+        </div>
+        [% } %]
+
+        <!--Categories-->
+        [% if (inventory_categories.length > 0) { %]
+        <h3>Categories</h3>
+        <div>
+          [% _.each(inventory_categories.models, function(m) { %]
+          <div class="doc_item">
+            [%= m.get('name') %]
+          </div>
+          [% }) %]
+        </div>
+        [% } %]
+
+        <!--Condition-->
+        [% if (inventory_conditions.length > 0) { %]
+        <h3>Condition</h3>
+        <div>
+          [% if (condition_description && condition_description.length > 0){ %]
+          <div>
+            <small>[%= condition_description.replace(/(?:\r\n|\r|\n)/g, '<br/>') %]</small>
+          </div>
+          [% } %]
+
+          [% _.each(inventory_conditions.models, function(m) { %]
+          <div class="doc_item">
+            [%= m.get('name') %]
+          </div>
+          [% }) %]
+        </div>
+        [% } %]
+
+        <!--Period-->
+        [% if (inventory_periods.length > 0) { %]
+        <h3>Period</h3>
+        <div>
+          [% if (period_description && period_description.length > 0){ %]
+          <div>
+            <small>
+              [%= period_description.replace(/(?:\r\n|\r|\n)/g, '<br/>') %]
+            </small>
+          </div>
+          [%} %]
+          [% _.each(inventory_periods.models, function(m) { %]
+          <div class="doc_item">
+            [%= m.get('name') %]
+          </div>
+          [% }) %]
+        </div>
+        [% } %]
+
+        <!--Care-->
+        [% if (care && care.length > 0){ %]
+        <h3>Care details</h3>
+        <div>
+          <div>[%= care.replace(/(?:\r\n|\r|\n)/g, '<br/>') %] </div>
+          [% if (inventory_care_docs.length > 0){ %]
+          <div>
+            <strong>Care documents</strong>
+          </div>
+
+          [% for (i in inventory_care_docs.models) {        %]
+          [% var doc = inventory_care_docs.models[i];       %]
+          <div class="doc_item">
+            <a href="[%= doc.get('file').url %]" target="_blank"><i class="glyphicon glyphicon-file">
+            </i>&nbsp;[%= doc.get("name") %]</a>
+          </div>
+          [% } %]
+          [% } %]
+        </div>
+        [% } %]
+
+        <!--Invoices-->
+        [% if (inventory_invoice_docs.length > 0){ %]
+        <h3>Invoice documents</h3>
+        <div>
+          [% for (i in inventory_invoice_docs.models) { var doc = inventory_invoice_docs.models[i]; %]
+          <div class="doc_item">
+            <a href="[%= doc.get('file').url %]" target="_blank"><i class="glyphicon glyphicon-file">
+            </i>&nbsp;[%= doc.get("name") %]</a>
+          </div>
+          [% } %]
+        </div>
+        [% } %]
+
+        <!--Warranty-->
+        [% if (inventory_warranty_docs.length > 0){ %]
+        <h3>Warranty documents</h3>
+        <div>
+          [% for (i in inventory_warranty_docs.models) { var doc = inventory_warranty_docs.models[i]; %]
+          <div class="doc_item">
+            <a href="[%= doc.get('file').url %]" target="_blank"><i class="glyphicon glyphicon-file">
+            </i>&nbsp;[%= doc.get("name") %]</a>
+          </div>
+          [% } %]
+        </div>
+        [% } %]
+
+        <!--Provenance-->
+        [% if (provenance_description || inventory_provenance_docs.length > 0) { %]
+            <h3>Provenance details</h3>
+            <div>
+              [% if (provenance_description ) { %]
+              <div class="doc_item">
+                <small>
+                  [%= provenance_description.replace(/(?:\r\n|\r|\n)/g, '<br/>') %]
+                </small>
+              </div>
+              [% } %]
+
+              [% if (inventory_provenance_docs.length > 0) { %]
+              <div>
+                <strong>Provenance documents</strong>
+              </div>
+              [% for (i in inventory_provenance_docs.models) { %]
+              [% var doc = inventory_provenance_docs.models[i]; %]
+              <div class="doc_item">
+                <a href="[%=doc.get('file').url %]" target="_blank">
+                  <i class="glyphicon glyphicon-file"></i>&nbsp;[%= doc.get("name") %]</a>
+              </div>
+              [% } %]
+              [% } %]
+            </div>
+        [% } %]
+      </div>
+    <div class="col-xs-12">
+      <button class="btn btn-default col-xs-offset-7 col-sm-2" id="btn-cancel-review-item">CANCEL</button>
+      <button class="btn btn-primary col-sm-2 pull-right" id="btn-save-review-item">SEND</button>
+    </div>
+  </div>
+</script>

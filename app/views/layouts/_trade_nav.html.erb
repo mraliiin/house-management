@@ -1,0 +1,11 @@
+<nav id="nav-bar" class="navbar navbar-default navbar-pristine affix-top" role="navigation">
+  <div class="container">
+    <div class="navbar-inner clearfix">
+      <ul class="nav navbar-nav">
+        <li class="<%= @trade_nav == "clients" ? "active" : "" %>"><a href="/trade/clients">CLIENTS</a></li>
+        <li class="<%= @trade_nav == "homes" ? "active" : "" %>"><a href="/trade/homes">HOMES</a></li>
+        <li class="<%= @trade_nav == "inventory" ? "active" : "" %>"><a href="/trade/inventory">INVENTORY</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>

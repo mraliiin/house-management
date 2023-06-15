@@ -1,0 +1,143 @@
+<script type="text/template" id="clients-list-template">
+  [% if (items.length > 0) { %]
+  [% var status_complete = items[0].trade_client_completed || 'all' %]
+  <!--Radio buttons-->
+  <div class="col-xs-12" id="client-filters">
+    <span>
+        <input type="radio" id="all" name="client.status" value="all"
+               [%= status_complete == "all" ? "checked='checked'" : "" %] /> All
+      </span>
+      <span>
+        <input type="radio" id="active" name="client.status" value="false"
+               [%= status_complete == "false" ? "checked='checked'" : "" %]/> Active
+      </span>
+      <span>
+        <input type="radio" id="completed" name="client.status" value="true"
+               [%= status_complete == "true" ? "checked='checked'" : "" %]/> Completed
+      </span>
+  </div>
+
+
+  <div class="clients-table col-xs-12">
+   <!-- Headers-->
+    <div class="row table-row" style="margin-right:16px">
+      <div class="col-xs-2 table-header">Client Name</div>
+
+      <div class="col-xs-10">
+        <div class="col-xs-3 table-header">Project</div>
+
+        <div class="col-xs-3 table-header text-center ">
+          <div class="col-xs-12">Inventory</div>
+          <div class="col-xs-12 text-center">
+            <div class="col-xs-5 table-mini-header  text-right">Active</div>
+            <div class="col-xs-2 table-mini-header ">|</div>
+            <div class="col-xs-5 table-mini-header  text-left">WIP</div>
+          </div>
+        </div>
+
+        <div class="col-xs-4 table-header text-center ">
+          <div class="col-xs-12">Digital Record Request</div>
+          <div class="col-xs-12  text-center">
+            <div class="col-xs-3 table-mini-header  text-right">Pending</div>
+            <div class="col-xs-2 table-mini-header ">|</div>
+            <div class="col-xs-3 table-mini-header  text-left">Received</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll">
+      [% _.each(items, function(client) { %]
+      <!--Client name-->
+      <div data-id="[%= client.id %]" class="trade-client-row row table-row" id="trade-client-row-[%= client.id %]">
+        <div class="col-xs-2">
+          <span class="capitalize">[%= client.first_name + ' ' + client.last_name %]</span>
+          <br/>
+          <div class="client-actions-container">
+              <span class="client-actions">
+                <a class="btn-view-client" data-id="[%= client.id %]">view</a> | <a class="btn-edit-client" data-id="[%= client.id %]">edit</a>
+              </span>
+          </div>
+        </div>
+
+        <div class="col-xs-10">
+            [% for (var i=0; i<client.houses.length; i++) { var h = client.houses.at(i); %]
+            [% var hasCounters = h.get("item_counters") != undefined %]
+          <div class="col-xs-12">
+            <!-- Projects list -->
+            <div class="col-xs-3 project-list ">
+              <a href="/trade/clients/[%= h.get('client_id') %]/projects/[%= h.get('id') %]">
+                <span class="capitalize">[%= h.get('name') %]</span>
+              </a>
+            </div>
+
+            <!--Inventory-->
+            <div class="col-xs-3 text-center">
+              <div class="col-xs-5 text-right">
+                <a href="/trade/inventory?project=[%= h.get('id') %]&status=active" class="ddr-status-received">
+                  [%= hasCounters ? h.get("item_counters").active_items : '0'%]
+                </a>
+              </div>
+              <div class="col-xs-2">|</div>
+              <div class="col-xs-5 text-left">
+                <a href="/trade/inventory?project=[%= h.get('id') %]&status=new" class="ddr-status-pending">
+                  [%= hasCounters ? h.get("item_counters").new_items : '0'%]
+                </a>
+              </div>
+            </div>
+
+            <!-- Digital Record Request -->
+            <div class="col-xs-4  text-center">
+              <div class="col-xs-3  text-right">
+                <a href="/trade/inventory?project=[%= h.get('id') %]&status=pending" class="ddr-status-pending">
+                  [%= hasCounters ? h.get("item_counters").pending_items : '0'%]
+                </a>
+              </div>
+
+              <div class="col-xs-2 ">|</div>
+
+              <div class="col-xs-2 text-left">
+                <a href="/trade/inventory?project=[%= h.get('id') %]&status=completed" class="ddr-status-received">
+                  [%= hasCounters ? h.get("item_counters").completed_items : '0'%]
+                </a>
+              </div>
+
+              <div class="text-left">
+                <a class="btn-new-drr" data-id="[%= h.id %]" href="/trade/inventory-items/request-info?project=[%= h.get('id') %]"
+                   data-no-turbolink="true">
+                  <img src="<%= asset_path("plus-button.png") %>"/> DRR
+                </a>
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="col-xs-2">
+                <button class="btn btn-link btn-xs btn-delete-project pull-right" data-id="[%= h.get('id') %]" data-client-id="[%= client.id %]">
+                  <img class="img-delete-row-item" src="<%= image_path('cross.png')%>" title="delete"/>
+                </button>
+
+               [% if (!h.get('trade_client_completed') ) { %]
+               <button class="btn btn-success btn-xs btn-complete-project pull-right" data-id="[%= h.get('id') %]" data-client-id="[%= client.id %]">
+                 Complete
+               </button>
+               [% } %]
+            </div>
+          </div>
+            [% } %]
+        </div>
+      </div> <!--End table row-->
+      [% }); %]
+      </div> <!--End scroll -->
+  </div> <!--End clients table-->
+
+  [% } else { %]
+  <div class="col-xs-12 text-center">
+    You don't have any clients yet. Start by
+    <a class="btn-new-client" data-target="#new-client-modal">creating your first client</a>.
+  </div>
+  [% } %]
+
+  <div class="col-xs-12">
+    <div class="alert" id="delete-client-feedback"></div>
+  </div>
+</script>

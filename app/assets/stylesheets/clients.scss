@@ -1,0 +1,172 @@
+.trade-client-row {
+  .client-actions-container {
+    min-height: 20px;
+
+    .client-actions {
+      display: none;
+      font-size: 90%;
+
+      a {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+#btn-new-client {
+  margin-right: 10px;
+}
+
+.btn-delete-home {
+  width: 20px;
+  cursor: pointer;
+}
+
+.homes-feedback {
+  display: none;
+}
+
+.user-logo {
+  height: 35px;
+  width: 35px;
+  display: inline-block;
+  border: solid 2px lightgray;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.user-logo img {
+  height: 35px;
+  width: auto;
+  position: absolute;
+  top: 0;
+  left: -2px;
+}
+
+/* room's first image*/
+.round-image {
+  height: 35px;
+  width: 35px;
+  display: inline-block;
+  border: solid 2px lightgray;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+
+  img {
+    height: 35px;
+    width: auto;
+    display: block;
+    margin: auto;
+  }
+
+  .no-image {
+    background-color: lightgray;
+    height: 100%;
+  }
+}
+
+
+.btn-round {
+  border-radius: 15px !important;
+}
+
+#user-info-container .btn-default {
+  border: none;
+}
+
+/*Client radio filters*/
+#client-filters {
+  margin-bottom: 20px;
+  font-size: 12px;
+  span {
+    padding-right: 10px;
+  }
+}
+
+/*Clients table*/
+.clients-table {
+  border-collapse: separate;
+  border-spacing: 0 3px;
+  color: #444444;
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .btn-new-drr img {
+    width: 16px;
+  }
+
+  /* Fixed headers */
+  .scroll {
+    height: 750px;
+    overflow-y: auto;
+  }
+
+  .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-12{
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  
+  .capitalize {
+      text-transform: capitalize;
+  }
+
+  .project-list {
+    a {
+      color: #666;
+      text-decoration: none;
+    }
+  }
+
+  .table-header {
+    line-height: 15px;
+    font-weight: bold;
+    word-break: break-word;
+  }
+
+  .table-mini-header {
+    font-size: 0.8em;
+  }
+
+  .table-row {
+    padding-left: 5px;
+    margin-top: 3px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  div.table-row:hover {
+    background: #E6E6E6;
+  }
+
+  .table-row:nth-of-type(odd) {
+    background: #F9F9F9;;
+  }
+
+  .table-row:nth-of-type(even) {
+    background: #F0F0F2;
+  }
+}
+
+/*Digital Record Requests*/
+.separator {
+  display: inline-block;
+  width: 60px;
+}
+
+.ddr-status-pending {
+  color: red !important;
+  display: inline-block;
+}
+
+.ddr-status-received {
+  color: forestgreen !important;
+  display: inline-block;
+}
+
+ul.nav.nav-tabs {
+  margin-bottom: 20px;
+}

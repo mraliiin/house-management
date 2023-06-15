@@ -1,0 +1,84 @@
+<!--List with available conditions-->
+<script type="text/template" id="item-list-conditions-template">
+  [% if (items.length > 0) { %]
+  <div class="form-group">
+    <h5 class="col-xs-12">Selected condition</h5>
+
+    <div class="row">
+      [% _.each(items, function(item) { %]
+      <div class="col-xs-12 item-category">
+        <span class="col-xs-6">[%= item.name %]</span>
+        <div class="col-xs-6 delete-item-container text-right">
+          <button class="btn btn-xs btn-danger delete-item-condition" data-id="[%= item.id %]">DEL</button>
+        </div>
+      </div>
+      [% }); %]
+    </div>
+  </div>
+  [% } %]
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="alert" style="display:none;margin-top:10px;" role="alert" id="item-conditions-feedback"></div>
+    </div>
+  </div>
+</script>
+
+<script type="text/template" id="item-add-conditions-template">
+  <div class="row">
+    [% if (conditions != null && conditions.length > 0) { %]
+    [% var current_condition = null; %]
+
+    <div class="col-xs-6">
+      <div class="list-group">
+        [% _.each(conditions, function(condition) { var selected = false; %]
+        [% if (selected_conditions.length > 0 && selected_conditions[0].id == condition.id) { %]
+        [% current_condition = condition; selected = true; %]
+        [% } %]
+        <button type="button" class="[%= (selected == true ? 'current-condition' : '')%] list-group-item select-condition"
+                data-id="[%= condition.id %]" data-level="0">[%= condition.name %]</button>
+        [% }); %]
+      </div>
+    </div>
+
+    <div class="col-xs-6">
+      <div class="list-group">
+         <textarea id="condition_description" class="form-control" placeholder="Condition description"
+               rows="4">[%= typeof(condition_description) != "undefined" ? condition_description : "" %]</textarea>
+      </div>
+    </div>
+
+    [% if (selected_conditions.length > 0 && current_condition != null) { %]
+    [% for (var i=0; i < selected_conditions.length; i++){ %]
+    <div class="col-xs-12">
+      <div class="list-group">
+        [% _.each(current_condition.descendants, function(condition) { var selected = false; %]
+        [% if (selected_conditions.length >(i+1) && selected_conditions[i+1].id == condition.id) { %]
+        [% current_condition = condition; selected = true; %]
+        [% } %]
+        <button type="button" class="[%= (selected == true ? 'current-condition' : '')%] list-group-item select-condition"
+                data-id="[%= condition.id %]" data-level="[%= (i+1) %]">[%= condition.name %]</button>
+        [% }); %]
+      </div>
+    </div>
+    [%      } %]
+    [%  } %]
+    [% } %]
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      [% if (selected_conditions.length == 0) { %]
+      <button class="btn btn-primary btn-sm" id="save-condition" disabled='disabled'>Add</button>
+      [% } else { %]
+      <button class="btn btn-primary btn-sm" id="save-condition">Add</button>
+      [% } %]
+    </div>
+  </div>
+
+  <div class="row" style="padding-top:10px;">
+    <div class="col-xs-12">
+      <div class="alert" style="display:none;" role="alert" id="item-add-conditions-feedback"></div>
+    </div>
+  </div>
+</script>

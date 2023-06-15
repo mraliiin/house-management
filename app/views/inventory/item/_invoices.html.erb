@@ -1,0 +1,49 @@
+<script type="text/template" id="item-invoice-template">
+  [% if (inventory_invoice_docs.length > 0) { %]
+  <div class="form-group">
+    <h5 class="col-xs-12">Invoice documents</h5>
+
+    <div class="row">
+      [% for (var i=0; i < inventory_invoice_docs.length; i++) { %]
+      [% var doc = inventory_invoice_docs.at(i); %]
+      <div class="col-xs-12 item-doc">
+        <a href="[%= doc.get('file').url %]" class="col-xs-6" target="_blank">[%= doc.get("name") %]</a>
+        <div class="delete-item-doc-container text-right col-xs-6">
+          <button class="btn btn-xs btn-danger delete-item-doc" data-id="[%= doc.id %]">DEL</button>
+        </div>
+      </div>
+      [% } %]
+    </div>
+  </div>
+  [% } %]
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div id="item-invoice-preview-template" class="file-row">
+        <!-- This is used as the file preview template -->
+        <div>
+          <span class="preview"><img class="image" data-dz-thumbnail/></span>
+        </div>
+        <div>
+          <p class="name" data-dz-name></p>
+
+          <p class="size" data-dz-size></p>
+        </div>
+        <div>
+          <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12">
+      <div class="alert" style="display:none;" role="alert" id="item-invoice-upload-feedback"></div>
+    </div>
+
+    <div class="col-xs-12 text-center" id="inventory-item-invoice-dropzone">
+      Drag files here or click to upload
+    </div>
+
+  </div>
+</script>

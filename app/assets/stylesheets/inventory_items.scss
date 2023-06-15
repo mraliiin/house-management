@@ -1,0 +1,421 @@
+// Place all the styles related to the InventoryItems controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.inventory-no-items {
+  padding: 50px;
+  color: #999;
+  font-size: 40px;
+}
+
+#failed-new-item-container {
+  padding: 50px 20px;
+  margin-top: 50px;
+}
+
+.inventory-item {
+  padding-bottom: 50px;
+}
+
+#inventory-item-images-dropzone {
+  border: 1px solid #ddd;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 200;
+  color: #666;
+  background-color: #e6e6e6;
+  padding: 20px 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+
+#item-images-preview-template p.name, #item-images-preview-template p.size, #item-images-preview-template img.image {
+  display: none;
+}
+
+#item-images-preview-template .progress {
+  height: 5px !important;
+  margin-bottom: 0 !important;
+}
+
+.show-inventory-item-container {
+  padding-top:30px;
+}
+
+
+.item-thumbnail {
+  height: 220px;
+  width: 220px;
+  line-height:220px;
+  display: inline-block;
+}
+
+.item-thumbnail-img {
+  max-height: 200px;
+  max-width: 200px;
+  border: 0;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.edit-item-thumbnail-img {
+  max-height: 200px;
+  max-width: 200px;
+  border: 0;
+  display: inline-block;
+//  cursor: move;
+}
+
+
+#inventory-item-care-dropzone, .docDropZone {
+  border: 1px solid #ddd;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 200;
+  color: #666;
+  background-color: #e6e6e6;
+  padding: 20px 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+
+#item-care-preview-template p.name, #item-care-preview-template p.size, #item-care-preview-template img.image {
+  display: none;
+}
+
+#item-care-preview-template .progress {
+  height: 5px !important;
+  margin-bottom: 0 !important;
+}
+
+
+
+#inventory-item-invoice-dropzone {
+  border: 1px solid #ddd;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 200;
+  color: #666;
+  background-color: #e6e6e6;
+  padding: 20px 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+
+#item-invoice-preview-template p.name, #item-invoice-preview-template p.size, #item-invoice-preview-template img.image {
+  display: none;
+}
+
+#item-invoice-preview-template .progress {
+  height: 5px !important;
+  margin-bottom: 0 !important;
+}
+
+
+
+#inventory-item-warranty-dropzone {
+  border: 1px solid #ddd;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 200;
+  color: #666;
+  background-color: #e6e6e6;
+  padding: 20px 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+
+#item-warranty-preview-template p.name, #item-warranty-preview-template p.size, #item-warranty-preview-template img.image {
+  display: none;
+}
+
+#item-warranty-preview-template .progress {
+  height: 5px !important;
+  margin-bottom: 0 !important;
+}
+
+.main-item-image {
+  height: 450px;
+  width: 450px;
+/*  line-height: 450px;*/
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.main-item-image img{
+  height: 400px;
+  width: auto;
+}
+
+.show-item-thumbnail {
+  display: inline-block;
+  width: 120px;
+  padding: 10px 0px;
+  text-align: center;
+}
+
+.show-item-thumbnail img {
+/*  max-height: 100px;
+  max-width: 100px;*/
+  width: 120px;
+  height: auto;
+}
+
+
+.edit-item-thumbnail-container {
+  height: 180px;
+  width: 150px;
+  float: left;
+  margin: 20px 10px;
+}
+
+.edit-item-thumbnail {
+  height: 150px;
+  width: 150px;
+  line-height: 150px;
+  text-align: center;
+
+  .edit-item-thumbnail-img {
+    max-height: 130px;
+    max-width: 130px;
+  }
+}
+
+
+.edit-item-thumbnail-container .delete-item-image-container {
+  height: 20px;
+  padding-bottom:5px;
+  text-align: right;
+
+  .delete-item-image {
+    max-width: 15px;
+    max-height: 15px;
+    cursor: pointer;
+  }
+}
+
+.item-doc {
+  padding-top: 5px;
+}
+
+.delete-item-doc-container {
+  padding-left:20px;
+  display: inline-block;
+}
+
+
+.item-category, .item-material {
+  padding-top: 5px;
+}
+
+.delete-item-category-container, .delete-item-container {
+  padding-left:20px;
+  display: inline-block;
+}
+
+.current-category, .current-condition, .current-period, .current-material {
+  background-color: #337ab7 !important;
+  color: #fff !important;
+}
+
+/*Inventory radio filters*/
+#inventory-filters-container {
+  border-radius: 4px;
+  border: 1px solid #e1e8ed;
+  background-color: #F2F2F2;
+  color: #666;
+  padding:  10px 10px 10px 2px;
+
+  label {
+    min-width: 95px;
+  }
+}
+
+#inventory-filters {
+  font-size: 12px;
+
+
+  span {
+    padding-right: 10px;
+  }
+}
+
+#btn-new-item {
+  margin-right:10px;
+}
+
+/*Inventory items*/
+.inventory-tile {
+  position: relative;
+  border: 1px solid #f0f0f0;
+  padding: 10px 0px;
+  margin: 10px;
+  overflow: hidden;
+  -webkit-transition: all 0.25s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+  -moz-transition: all 0.25s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+  transition: all 0.25s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+  background: #F2F2F2;
+
+  a {
+    color: #666;
+    text-decoration: none;
+  }
+
+  .new-tile-image > a:hover {
+    text-decoration: underline;
+  }
+
+  .item-tile-img {
+    height: 200PX;
+    width: auto;
+    border: 0;
+    display: inline-block;
+    cursor: pointer;
+  }
+}
+
+.house-tile:hover {
+  box-shadow: 0 0 1em #E6E6E6;
+}
+
+@media(min-width: 768px) {
+  .inventory-tile {
+    padding-left: 0;
+  }
+}
+
+/*Item title*/
+.item-title {
+  font-weight: 500;
+  font-size: 1.2em;
+  margin: 5px 0px;
+}
+
+/*Item documents*/
+.documents {
+  text-align: left;
+}
+
+.documents {
+  border-top: dotted 1px lightgray;
+  margin-top: 10px;
+
+  ul {
+    margin: auto;
+    list-style-type: none;
+    width: 250px;
+    padding-left: 0px;
+
+    li {
+      padding: 2px 0;
+      font-size: 0.8em;
+      text-align: left;
+
+      span {
+        width: 100px;
+        float: left;
+        padding-top: 8px;
+      }
+
+      .col-xs-1 {
+        line-height: 30px;
+      }
+
+    }
+
+    .documents-list {
+      display:inline-block;
+
+      .doc-img {
+        height: 30px;
+        width: auto;
+        display: inline-block;
+      }
+    }
+  }
+
+  .btn-new-document {
+    background-color: transparent;
+    border: none;
+
+    img {
+      width: 12px;
+    }
+  }
+}
+
+
+/*Accordion*/
+.accordion {
+  display: block;
+  margin: 0 auto;
+
+  h3 {
+    font-weight: bold;
+    color: lightgray;
+    width: 100%;
+    padding: 0;
+    display: block;
+    margin: 5px 0 5px 0;
+    overflow: hidden;
+    border-bottom: solid 1px #ccc;
+    cursor: pointer;
+  }
+
+  section:target {
+    height: auto;
+    h3 {
+      border-bottom: solid 2px #ccc;
+      color: #000000;
+    }
+  }
+}
+
+span.required {
+  color: red;
+}
+
+.select-category {
+  border-radius: 0;
+}
+
+.modal-form {
+  .list-group{
+    margin-bottom: 10px;
+    .list-group-item {
+      padding: 5px;
+    }
+  }
+
+  input#item-title {
+    box-shadow: none;
+  }
+}
+
+/*Inventory item view*/
+.doc_item {
+  a {
+    color: #666;
+  }
+}
+
+.dimension-label {
+  display: block;
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555555;
+  background-image: none;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+#form-request-info {
+  margin-top: 20px;
+}

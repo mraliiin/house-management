@@ -1,0 +1,223 @@
+.btn-edit-room {
+  padding-left:10px;
+  font-size: 15px;
+  cursor: pointer;
+  &:hover {
+    color: #337ab7;
+  }
+}
+
+.btn-update-room{
+  cursor: pointer;
+  font-size: 15px;
+  padding-top:5px;
+  color: #009900;
+  &:hover {
+    color: #000;
+  }
+}
+
+.btn-cancel-update {
+  cursor: pointer;
+  font-size: 15px;
+  padding-top:5px;
+  color: #990000;
+  &:hover {
+    color: #000;
+  }
+}
+
+.input-room-name {
+  width: 70% !important;
+  display: inline-block !important;
+}
+
+
+.btn-edit-room-description {
+  padding-left:10px;
+  font-size: 15px;
+  cursor: pointer;
+  &:hover {
+    color: #337ab7;
+  }
+}
+
+.btn-update-room-description{
+  cursor: pointer;
+  font-size: 15px;
+  padding-top:5px;
+  color: #009900;
+  &:hover {
+    color: #000;
+  }
+}
+
+.btn-cancel-update-description {
+  cursor: pointer;
+  font-size: 15px;
+  padding-top:5px;
+  color: #990000;
+  &:hover {
+    color: #000;
+  }
+}
+
+.input-room-description {
+  width: 70% !important;
+  display: inline-block !important;
+}
+
+
+
+#room-images-dropzone {
+  border: 1px solid #ddd;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 200;
+  color: #666;
+  background-color: #e6e6e6;
+  padding: 20px 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+
+#room-images-preview-template p.name, #room-images-preview-template p.size, #room-images-preview-template img.image {
+  display: none;
+}
+
+#room-images-preview-template .progress {
+  height: 5px !important;
+  margin-bottom: 0 !important;
+}
+
+.room-image-delete {
+  text-align:right;
+  height: 30px;
+  line-height: 30px;
+}
+
+.btn-del-image {
+  width: 20px;
+  cursor: pointer;
+}
+
+.room-image-container {
+  position: relative;
+  float: left;
+/*  width: 250px;*/
+  height: 250px;
+  text-align:center;
+
+  .btn-del-image {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+  }
+}
+
+.room-image-wrapper {
+  height: 220px;
+  width: 220px;
+  line-height: 200px;
+  border: 1px solid #f0f0f0;
+  padding: 10px 0px;
+  margin: 10px 10px 10px 0;
+  overflow: hidden;
+  -webkit-transition: all 0.25s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+  -moz-transition: all 0.25s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+  transition: all 0.25s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+  background: #F2F2F2;
+}
+
+.room-image {
+  max-height: 200px;
+  max-width: 200px;
+  cursor: pointer;
+}
+
+.room-image-large {
+  max-height: 560px;
+  max-width: 560px;
+}
+
+.add-note {
+  padding-top:20px;
+}
+
+.input-add-note {
+  width: 80% !important;
+  display: inline-block !important;
+}
+
+.btn-save-note {
+  width: 15% !important;
+  display: inline-block !important;
+}
+
+.add-note-instructions{
+  color: #3f9ed4;
+}
+
+.room-image-note-indicator {
+  position: absolute;
+  z-index: 10;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  color: #fff;
+  background: url(asset_path('room-note-marker.png')) no-repeat;
+  cursor: pointer;
+}
+
+.room-image-notes {
+  padding: 10px 20px 0 20px;
+}
+
+.room-image-note {
+  padding-top:5px;
+  padding-bottom:5px;
+  &:hover{
+    background-color: #e6e6e6;
+  }
+}
+
+#new-note-feedback {
+  display: none;
+}
+
+
+.btn-edit-note {
+  padding-left:10px;
+  font-size: 15px;
+  cursor: pointer;
+  &:hover {
+    color: #337ab7;
+  }
+}
+
+.btn-update-note{
+  cursor: pointer;
+  font-size: 15px;
+  padding-top:5px;
+  color: #009900;
+  &:hover {
+    color: #000;
+  }
+}
+
+.btn-cancel-edit-note {
+  cursor: pointer;
+  font-size: 15px;
+  padding-top:5px;
+  color: #990000;
+  &:hover {
+    color: #000;
+  }
+}
+
+.input-note-name {
+  width: 70% !important;
+  display: inline-block !important;
+}

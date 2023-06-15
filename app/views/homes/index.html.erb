@@ -1,0 +1,67 @@
+
+<script type="text/template" id="homes-template">
+  <div class="col-xs-12" style="padding-top:30px;">
+    <%= render "layouts/trade_nav" %>
+  </div>
+
+  <!--Header-->
+  <!--Header-->
+  <div class="col-xs-12">
+    <div>
+      <div class="row page-header-text">
+        <div class="col-xs-6">
+          <span class="page-title">HOMES</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  [% if (items.length > 0) { %]
+
+  <div class="col-xs-12 box">
+
+    <div class="row">
+      [% _.each(items, function(house) { %]
+      <div class="col-sm-6 col-md-4">
+        <div class="house-tile text-center">
+          <div class="new-tile-image">
+            <a href="/trade/homes/[%= house.id %]">[%= house.name %]</a>
+          </div>
+        </div>
+      </div>
+      [% }); %]
+    </div>
+
+  </div>
+
+<!--  [% _.each(items, function(house) { %]
+  <div class="col-xs-12 user-home">
+    <a href="/trade/homes/[%= house.id %]"><span class="glyphicon glyphicon-home" ></span> &nbsp; [%= house.name %]</a>
+  </div>
+  [% }); %]-->
+  [% } %]
+</script>
+
+
+
+<script type="text/javascript">
+    $(function(){
+        var Models = HousePad.TradeApp.module("Models");
+        <% HouseManagementApi::House.include_root_in_json = false %>
+        var houses = new Models.Houses(<%= @houses.to_json.html_safe %>);
+
+        //Start app
+        HousePad.TradeApp.start(
+        {
+            house: house,
+            current_user : get_current_user(<%= @user.to_json.html_safe %>)
+        });
+
+        //Start Index module
+        HousePad.TradeApp.module("Homes.List").start();
+
+        //Start routing
+//        Backbone.history.start({pushState: true, hashChange: false, root: "/trade/"});
+    });
+
+</script>

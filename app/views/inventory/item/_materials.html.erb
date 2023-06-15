@@ -1,0 +1,81 @@
+<!--Current materials list-->
+<script type="text/template" id="item-list-materials-template">
+  [% if (items.length > 0) { %]
+  <div class="form-group">
+    <h5 class="col-xs-12">Selected materials</h5>
+
+    <div class="row">
+      [% _.each(items, function(item) { %]
+      <div class="col-xs-12 item-material">
+        <span class="col-xs-6">[%= item.name %]</span>
+
+        <div class="col-xs-6 delete-item-material-container text-right">
+          <button class="btn btn-xs btn-danger delete-item-material" data-id="[%= item.id %]">DEL</button>
+        </div>
+      </div>
+      [% }); %]
+    </div>
+  </div>
+  [% } %]
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="alert" style="display:none;margin-top:10px;" role="alert" id="item-materials-feedback"></div>
+    </div>
+  </div>
+</script>
+
+<!--Add materials form-->
+<script type="text/template" id="item-add-materials-template">
+  <div class="row">
+    [% if (materials != null && materials.length > 0) { %]
+    [% var current_material = null; %]
+
+    <div class="col-xs-12 col-sm-4">
+      <div class="list-group">
+        [% _.each(materials, function(material) { var selected = false;                         %]
+        [% if (selected_materials.length > 0 && selected_materials[0].id == material.id) {      %]
+        [% current_material = material; selected = true;                                        %]
+        [% } %]
+        <button type="button" class="[%= (selected == true ? 'current-material' : '')%] list-group-item select-material"
+                data-id="[%= material.id %]" data-level="0">[%= material.name                   %]
+        </button>
+        [% }); %]
+      </div>
+    </div>
+
+    [% if (selected_materials.length > 0 && current_material != null) {                         %]
+    [% for (var i=0; i < selected_materials.length; i++){                                       %]
+    <div class="col-xs-12 col-sm-4">
+      <div class="list-group">
+        [% _.each(current_material.descendants, function(material) { var selected = false; %]
+        [% if (selected_materials.length >(i+1) && selected_materials[i+1].id == material.id) { %]
+        [% current_material = material; selected = true; %]
+        [% } %]
+        <button type="button" class="[%= (selected == true ? 'current-material' : '')%] list-group-item select-material"
+                data-id="[%= material.id %]" data-level="[%= (i+1) %]">[%= material.name %]
+        </button>
+        [% });                                                                                  %]
+      </div>
+    </div>
+    [% }                                                                                        %]
+    [% }                                                                                        %]
+    [% }                                                                                        %]
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      [% if (selected_materials.length == 0) {                                                  %]
+      <button class="btn btn-primary btn-sm" id="save-material" disabled='disabled'>Add</button>
+      [% } else {                                                                               %]
+      <button class="btn btn-primary btn-sm" id="save-material">Add</button>
+      [% }                                                                                      %]
+    </div>
+  </div>
+
+  <div class="row" style="padding-top:10px;">
+    <div class="col-xs-12">
+      <div class="alert" style="display:none;" role="alert" id="item-add-materials-feedback"></div>
+    </div>
+  </div>
+</script>

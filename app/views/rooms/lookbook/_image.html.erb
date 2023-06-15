@@ -1,0 +1,79 @@
+<script type="text/template" id="room-image-template">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+        <img src="<%= asset_path("cross.png") %>"/></button>
+    </div>
+
+    <div class="modal-body">
+      <!--Image indicators-->
+      <div class="row">
+        <div class="col-xs-12 text-center">
+          <div style="position:relative; display:inline-block;">
+            <img src="[%= image.large.url %]" class="room-image-large" id="room-image-large"/>
+            [% if (snapshot_notes.length > 0) {%]
+                [% for (var i = 0; i < snapshot_notes.length; i++){ %]
+                    <div class="room-image-note-indicator" id="room-image-note-indicator-[%= (i+1) %]"
+                         data-id="[%= snapshot_notes.at(i).get('id') %]">[%= (i+1) %]
+                    </div>
+                [% } %]
+            [% } %]
+          </div>
+        </div>
+
+        <!-- Notes list-->
+        [% if (snapshot_notes.length > 0) {%]
+        <div class="room-image-notes">
+          <div class="row">
+            <div class="col-xs-12" id="room-image-notes-container">
+              [% for (var i=0; i < snapshot_notes.length; i++){ %]
+              <div class="row room-image-note text-justify" data-id="[%= snapshot_notes.at(i).get('id') %]">
+                <div class="col-xs-10">
+                  [%= (i+1) %].
+                  [% if(snapshot_notes.at(i).get("edit_mode") == true) {%]
+                <textarea class="form-control input-note-name" id="input-note-message-[%= snapshot_notes.at(i).get('id')%]"
+                          name="snapshot_note[message]">[%= snapshot_notes.at(i).get("message") %]</textarea>
+                  <span class="glyphicon glyphicon-ok btn-update-note" data-id="[%= snapshot_notes.at(i).get('id') %]"></span>
+                  <span class="glyphicon glyphicon-remove btn-cancel-edit-note" data-id="[%= snapshot_notes.at(i).get('id')%]"></span>
+                  [%} else {%]
+                  [%= snapshot_notes.at(i).get("message").replace(/(\n)+/g, '<br/>') %]
+                  <span class="glyphicon glyphicon-pencil btn-edit-note" data-id="[%= snapshot_notes.at(i).get('id')%]"></span>
+                  [% } %]
+                </div>
+                <div class="col-xs-2 text-right">
+                  <button class="btn btn-danger btn-xs btn-del-note" data-id="[%= snapshot_notes.at(i).get('id') %]">DEL</button>
+                </div>
+              </div>
+              [% } %]
+            </div>
+          </div>
+        </div>
+        [% } %]
+
+        <!--Tooltip-->
+        <div class="col-xs-12 add-note-instructions text-center"
+             style="[%= (add_note_mode == true && typeof(note_position) == 'undefined' ? 'display:block' : 'display:none') %];">
+          <em>Tap or click where you would like to create the note</em>
+        </div>
+
+        <div class="col-xs-12 text-left">
+          <div class="alert" id="new-note-feedback"></div>
+        </div>
+
+        <div class="col-xs-12 add-note"
+             style="[%= (add_note_mode == true && typeof(note_position) != 'undefined' ? 'display:block' : 'display:none')%];">
+          <textarea class="form-control input-sm input-add-note" placeholder="Add your note" name="message"></textarea>
+          <button class="btn btn-sm btn-default btn-save-note pull-right">Save Note</button>
+        </div>
+
+        <div class="col-xs-12 text-center" style="padding-top:20px;">
+          <button class="btn btn-sm btn-default btn-add-note">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Note
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+    </div>
+  </div>
+</script>

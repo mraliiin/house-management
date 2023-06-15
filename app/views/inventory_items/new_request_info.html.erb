@@ -1,0 +1,54 @@
+<script type="text/template" id="inventory-request-template">
+    <div class="col-xs-12">
+    <div>
+      <div class="row page-header-text">
+        <div class="col-xs-6">
+          <span class="page-title">REQUEST ITEM INFORMATION</span>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div id="ddr-breadcrumbs"></div>
+    <div class="col-xs-8 col-xs-push-2" id="inventory-request-info"></div>
+
+    <div class="page-overlay" id="page-overlay">
+        <img src="<%= asset_url('spinner.gif') %>" border="0" class="progress-spinner"/>
+    </div>
+</script>
+
+<%= render "inventory/ddr_breadcrumbs" %>
+
+<%= render "inventory/ddr_request_info" %>
+
+<script type="text/javascript">
+    $(function(){
+        var Models = HousePad.TradeApp.module("Models");
+
+        var inventory_item = new Models.InventoryItem(
+        {
+            project: parseInt("<%= params[:project] %>"),
+        });
+
+        if ('<%= params[:room] %>') {
+            inventory_item.set("room", parseInt("<%= params[:room] %>"));
+        }
+
+        var ddr_breadcrumb_data = new Models.TradeClient(<%= @ddr_breadcrumb_data.to_json.html_safe %>);
+        var all_item_sections = new Models.InventoryItemSections(<%= @all_item_sections.to_json.html_safe %>);
+
+        inventory_item.set("ddr_breadcrumb_data", ddr_breadcrumb_data);
+        inventory_item.set("house_list_data", ddr_breadcrumb_data.clone()); // for the form
+        inventory_item.set("all_item_sections", all_item_sections);
+
+        HousePad.TradeApp.start(
+        {
+            inventory_item: inventory_item,
+            current_user : get_current_user(<%= @user.to_json.html_safe %>),
+        });
+
+        // Start Inventory RequestInfo module
+        HousePad.TradeApp.module("Inventory.Item.RequestInfo").start();
+    });
+</script>
+

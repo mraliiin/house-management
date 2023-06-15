@@ -1,0 +1,285 @@
+<script type="text/template" id="settings-template">
+  <div class="col-xs-12" id="settings-menu-container"></div>
+  <div class="col-xs-12" id="settings-main-container"></div>
+</script>
+
+
+<script type="text/template" id="settings-menu-template">
+  <div class="col-xs-12">
+    <ul class="nav nav-tabs">
+      <li role="presentation" class="active"><a href="/trade/settings/account-details" id="nav-settings-account-details">Account Details</a></li>
+      <li role="presentation"><a href="/trade/settings/billing" id="nav-settings-billing">Billing</a></li>
+    </ul>
+  </div>
+</script>
+
+
+<script type="text/template" id="billing-template">
+  <div class="col-xs-12" id="billing-info-container"></div>
+  <div class="col-xs-12" id="billing-transactions-container"></div>
+
+  <div class="modal fade" id="billing-info-modal"></div>
+</script>
+
+
+<script type="text/template" id="billing-info-template">
+
+  [% if (braintree_subscription) { %]
+
+      <div class="col-xs-12" style="padding-top:20px;">
+        <h4>[%= braintree_subscription.plan.name %]</h4>
+        <p>[%= braintree_subscription.plan.description %]</p>
+        <p>$[%= parseFloat(braintree_subscription.plan.price).toFixed(2) %] per month</p>
+        <button class="btn btn-primary" id="btn-change-plan">Change plan</button>
+      </div>
+
+      <div class="col-xs-12" style="padding-top:20px;">
+
+        [% if (braintree_subscription.payment_method != null) {%]
+            <h4>
+            <img src="[%= braintree_subscription.payment_method.image_url %]" class="credit_card_img"/> [%= braintree_subscription.payment_method.card_type %] ending in [%= braintree_subscription.payment_method.last_4 %]
+            </h4>
+            <p>Next charge: $[%= braintree_subscription.next_billing_period_amount %] on [%= braintree_subscription.next_billing_date %] </p>
+        [% } %]
+        <button class="btn btn-primary" id="btn-configure-payment">
+          [% if (braintree_subscription.payment_method == null) {%]
+          Add payment method
+          [% } else { %]
+          Update payment method
+          [% } %]
+        </button>
+      </div>
+
+  [% } else { %]
+
+      <div class="col-xs-12 text-center" style="padding-top:50px;">
+        <button class="btn btn-primary" id="btn-activate-plan">Activate plan</button>
+      </div>
+
+  [% } %]
+</script>
+
+
+<script type="text/template" id="select-plan-template">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="modal-title">Select a plan</span>
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="<%= asset_path("cross.png")%>"/></button>
+    </div>
+
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="list-group">
+            [% for (var i=0; i<braintree_plans.length; i++) { var plan = braintree_plans.at(i); %]
+            <a class="braintree-plan list-group-item [%= ((selected_braintree_plan != null && plan.get('id') == selected_braintree_plan.id) || (selected_braintree_plan == null && plan.get('active') == true) ? 'active' : '') %]" data-id="[%= plan.get('id') %]">
+              <h4 class="list-group-item-heading">[%= plan.get("name") %]</h4>
+              <p class="list-group-item-text">[%= plan.get("description") %]</p>
+              [% if (plan.get("add_ons").length > 0) { %]
+              <p class="list-group-item-text">$[%= parseFloat(plan.get("add_ons")[0].amount).toFixed(2) %] [%= plan.get("add_ons")[0].name %]</p>
+              [% } %]
+              <p class="list-group-item-text">$[%= parseFloat(plan.get("price")).toFixed(2) %] per month</p>
+            </a>
+            [% } %]
+          </div>
+        </div>
+      </div>
+
+      <div class="row" id="feedback-plan-container" style="display:none;">
+        <div class="col-sm-6 col-xs-12">
+          <div class="alert" id="feedback-plan"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-sm-6 col-xs-12 text-left">
+          <img src="<%= asset_url("spinner.gif") %>" border="0" id="plan-progress" style="display:none;"/>
+        </div>
+        <div class="col-sm-6 col-xs-12 text-right">
+          [% if (plan_mode == "subscription") { %]
+          <a class="btn btn-primary [%= (selected_braintree_plan == null ? 'disabled' : '') %]" id="btn-braintree-plan-selected">Next</a>
+          [% } else if (plan_mode == "plan") { %]
+          <input type="submit" class="btn btn-primary" id="btn-confirm-plan" value="Confirm">
+          [% } %]
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+
+<script type="text/template" id="payment-method-template">
+  <form id="checkout" method="post">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="modal-title">Payment method</span>
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="<%= asset_path("cross.png")%>"/></button>
+    </div>
+
+    <div class="modal-body">
+
+        <div id="payment-form"></div>
+
+        <div class="row" id="feedback-payment-method-container" style="display:none;">
+          <div class="col-sm-6 col-xs-12">
+            <div class="alert" id="feedback-payment-method"></div>
+          </div>
+        </div>
+
+    </div>
+
+
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-xs-5 text-left">
+          [% if (payment_mode == "subscription") { %]
+          <button class="btn btn-default" id="btn-back-to-plans">Back</button>
+          [% } %]
+        </div>
+        <div class="col-xs-2 text-center">
+          <img src="<%= asset_url("spinner.gif") %>" border="0" id="payment-method-progress" style="display:none;"/>
+        </div>
+        <div class="col-xs-5 text-right">
+          [% if (payment_mode == "subscription") { %]
+          <input type="submit" class="btn btn-primary" id="btn-save-payment-method" value="Next">
+          [% } else if (payment_mode == "payment") { %]
+          <input type="submit" class="btn btn-primary" id="btn-confirm-payment-method" value="Confirm">
+          [% } %]
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </form>
+</script>
+
+
+<script type="text/template" id="confirm-subscription-template">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="modal-title">Confirm subscription</span>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="<%= asset_path("cross.png")%>"/></button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="row" >
+          <div class="col-sm-12 col-xs-12">
+            <h5>Selected plan</h5>
+            <p><strong>[%= selected_braintree_plan.name %]</strong></p>
+            <p>[%= selected_braintree_plan.description %]</p>
+            [% if (selected_braintree_plan.add_ons.length > 0) { %]
+            <p class="list-group-item-text">$[%= parseFloat(selected_braintree_plan.add_ons[0].amount).toFixed(2) %] [%= selected_braintree_plan.add_ons[0].name %]</p>
+            [% } %]
+            <p>$[%= parseFloat(selected_braintree_plan.price).toFixed(2) %] per month</p>
+          </div>
+        </div>
+
+        <div class="row" >
+          <div class="col-sm-12 col-xs-12">
+            <h5>Payment method</h5>
+            <p>[%= selected_payment_method.details.cardType %] ending in **[%= selected_payment_method.details.lastTwo %]</p>
+          </div>
+        </div>
+
+        <div class="row" id="feedback-confirm-subscription-container" style="display:none;">
+          <div class="col-sm-12 col-xs-12">
+            <div class="alert" id="feedback-confirm-subscription"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-xs-5 text-left">
+            <a class="btn btn-default" id="btn-back-to-payment">Back</a>
+          </div>
+          <div class="col-xs-2 text-center">
+            <img src="<%= asset_url("spinner.gif") %>" border="0" id="confirm-subscription-progress" style="display:none;"/>
+          </div>
+          <div class="col-xs-5 text-right">
+            <a class="btn btn-primary" id="btn-confirm-subscription">Confirm subscription</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+</script>
+
+
+
+<script type="text/template" id="billing-transactions-template">
+  [% if (braintree_subscription!=null && braintree_subscription.transactions.length > 0) { %]
+  <div class="col-xs-12" style="padding-top:50px;">
+    <h4>Transaction history</h4>
+  </div>
+
+  <div class="col-xs-12">
+    <table class="table table-condensed table-striped" id="transaction-history">
+        <thead>
+          <tr>
+            <th>Charge date</th>
+            <th>Billing period</th>
+            <th>Payment method</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+
+        [% for (var i=0; i<braintree_subscription.transactions.length; i++) { var transaction = braintree_subscription.transactions[i]; %]
+        <tr>
+          <td>[%= transaction.created_at %]</td>
+          <td>[%= transaction.billing_period_start_date %] - [%= transaction.billing_period_end_date %]</td>
+          <td><img src="[%= transaction.credit_card.image_url %]" class="credit_card_img"/> [%= transaction.credit_card.card_type%] ending in [%= transaction.credit_card.last_4 %]</td>
+          <td>$[%= parseFloat(transaction.amount).toFixed(2) %]</td>
+        </tr>
+        [% } %]
+    </table>
+  </div>
+  [% } %]
+</script>
+
+
+
+
+
+<script type="text/javascript">
+    $(function(){
+
+        //Start app
+        //The app receives the current user model
+        var Models = HousePad.TradeApp.module("Models");
+        var current_user = new Models.User({
+            id: "<%= @user.id %>",
+            first_name: "<%= @user.first_name.html_safe %>",
+            last_name: "<%= @user.last_name.html_safe %>",
+            email: "<%= @user.email.html_safe %>",
+            phone: "<%= @user.phone.html_safe %>",
+            avatar: {
+                url: "<%= @user.avatar.url ? @user.avatar.url.html_safe : "" %>",
+                thumb: {
+                    url: "<%= @user.avatar.thumb.url ? @user.avatar.thumb.url.html_safe : "" %>"
+                }
+            },
+
+            braintree_customer_id: "<%= @braintree_customer_id %>",
+            braintree_client_token: "<%= @braintree_client_token %>",
+            braintree_subscription: <%= @braintree_subscription.to_json.html_safe %>,
+            braintree_plans: new Backbone.Collection(<%= @braintree_plans.to_json.html_safe %>),
+            selected_braintree_plan: <%= @braintree_plan.to_json.html_safe %>
+        });
+
+        HousePad.TradeApp.start({current_user: current_user});
+
+        //Start Settings module
+        HousePad.TradeApp.module("Settings").start();
+        HousePad.TradeApp.module("Settings.Billing").start();
+
+//        //Start routing
+//        Backbone.history.start({pushState: true, hashChange: false, root: "/trade/"});
+    });
+
+</script>
+

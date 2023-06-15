@@ -1,0 +1,90 @@
+
+<script type="text/template" id="activation-template">
+  <div class="col-xs-12">
+    <div class="page-header">
+      <div class="row">
+        <div class="col-xs-12" class="page-header-text">Trade Account Activation</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-12">
+    The HousePad Trade Account allows you to work with up to 10 clients. For each client you can create and configure multiple homes and then transfer ownership when they are ready.
+  </div>
+
+  <div class="col-xs-12">
+
+    <form role="form" class="form form-horizontal" id="form-activation">
+
+      <div class="form-group" style="padding-top:30px;">
+        <label for="company_name" class="col-xs-12 col-sm-3 control-label">Company name</label>
+        <div class="col-xs-12 col-sm-6">
+            <input type="text" class=" form-control" id="company_name" name="company_name" placeholder="Company name" value="">
+        </div>
+      </div>
+
+      <div class="checkbox" style="padding-top:30px;">
+        <label class="col-xs-12 col-sm-6 col-sm-offset-3">
+          <input type="checkbox" value="Y" name="agree_terms" id="agree_terms">
+          I agree to the <a href="/trade/trade_account_terms.html">HousePad Trade Program Terms of Use Agreement</a>
+        </label>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-6 col-sm-offset-3 col-xs-12 text-left" style="padding-top:30px;">
+          <button type="submit" class="btn btn-primary" id="btn-confirm">Continue</button>
+        </div>
+      </div>
+
+      <div class="form-group" id="activation-progress" style="display:none;">
+        <div class="col-sm-6 col-sm-offset-3 col-xs-12">
+          <img src="<%= asset_url("spinner.gif") %>" border="0" class="progress-spinner"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-6 col-sm-offset-3 col-xs-12 text-left">
+          <div class="alert" id="activation-feedback"></div>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</script>
+
+
+<script type="text/template" id="confirmation-template">
+  <div class="col-xs-12 text-center" style="padding-top:50px;" id="activation_confirmation">
+    Congratulations!
+    <br/>
+    Your Trade Account has been activated.
+    <br/>
+    Start by <a href="/trade/clients/new">creating your first client</a>.
+  </div>
+</script>
+
+
+<script type="text/javascript">
+    $(function(){
+        var Models = HousePad.TradeApp.module("Models");
+        var current_user = new Models.User({
+            id: "<%= @user.id %>",
+            first_name: "<%= @user.first_name.html_safe %>",
+            last_name: "<%= @user.last_name.html_safe %>",
+            email: "<%= @user.email.html_safe %>",
+            phone: "<%= @user.phone.html_safe %>",
+            avatar: {
+                url: "<%= @user.avatar.url ? @user.avatar.url.html_safe : "" %>",
+                thumb: {
+                    url: "<%= @user.avatar.thumb.url ? @user.avatar.thumb.url.html_safe : "" %>"
+                }
+            }
+        });
+        HousePad.TradeApp.start({current_user: current_user});
+
+        //Start Activation module
+        HousePad.TradeApp.module("Activation").start();
+
+    });
+
+</script>

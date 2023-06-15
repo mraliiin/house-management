@@ -1,0 +1,51 @@
+<script type="text/template" id="ddr-breadcrumbs-template">
+
+  <div class="breadcrumbs">
+    <div class="col-xs-12">
+      <div class="breadcrumbs-root btn-group">
+        <button class="btn btn-link">
+          <a href="/trade/clients" data-no-turbolink="true">Clients</a>
+        </button>
+      </div>
+
+      [% if (items.selected_client) { %]
+      [% var selected_house = items.selected_client.selected_house; %]
+      <!--Houses-->
+      <div class="btn-group">
+        <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          [%= selected_house.name %] <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          [% _.each(items.selected_client.other_houses, function(item) { %]
+          <li>
+            <a href="/trade/inventory-items/request-info?project=[%= item.id %]" data-no-turbolink="true">
+              [%= item.name %]
+            </a>
+          </li>
+          [% }); %]
+        </ul>
+      </div>
+
+      <!--Rooms-->
+      [% if(selected_house) { %]
+      <div class="btn-group">
+        <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          [%= selected_house.selected_room ? selected_house.selected_room.title : '-' %] <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          [% if(selected_house.other_rooms.length > 0) {%]
+          [% _.each(selected_house.other_rooms, function(item) { %]
+          <li>
+            <a href="/trade/inventory-items/request-info?project=[%= selected_house.id %]&room=[%=item.id%]" data-no-turbolink="true">
+              [%= item.title %]
+            </a>
+          </li>
+          [% }); %]
+          [% } %]
+        </ul>
+      </div>
+      [% } %]
+      [% } %]
+    </div>
+  </div>
+</script>

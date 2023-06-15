@@ -1,0 +1,311 @@
+<script type="text/template" id="home-details-template">
+
+  <div class="col-xs-12" id="show-home-container"></div>
+
+  <div class="col-xs-12" id="breadcrumbs-container"></div>
+
+  <div class="col-xs-12" id="home-rooms-container"></div>
+
+  <div class="modal fade" id="new-room-modal"></div>
+</script>
+
+<script type="text/template" id="breadcrumbs-template">
+  <div class="row">
+    <div class="col-xs-12 breadcrumbs">
+        <div class="col-xs-11">
+          <div class="breadcrumbs-root btn-group">
+            <button class="btn btn-link btn-crumb">
+              <a href="/trade/clients" data-no-turbolink="true">Clients</a>
+            </button>
+          </div>
+          <div class="btn-group">
+            <a class="btn btn-link btn-crumb" href="/trade/clients?client=[%= items.selected_client.id %]" data-no-turbolink="true">
+              [%= items.selected_client.first_name + ' ' + items.selected_client.last_name %]
+            </a>
+            <button type="button" class="btn btn-crumb dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              [% _.each(items.other_clients, function(item) { %]
+              <li>
+                <a href="/trade/clients/[%= item.id %]" data-no-turbolink="true">
+                  [%= item.first_name + ' ' + item.last_name %]
+                </a>
+              </li>
+              [% }); %]
+            </ul>
+          </div>
+          <div class="btn-group">
+            <a class="btn btn-link btn-crumb" href="/trade/clients/[%= items.selected_client.id %]/projects/[%= items.selected_house.id %]" data-no-turbolink="true">
+              [%= items.selected_house.name %]
+            </a>
+            <button type="button" class="btn btn-crumb dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              [% _.each(items.selected_client.houses, function(item) { %]
+              <li>
+                <a href="/trade/clients/[%= item.client_id %]/projects/[%=item.id%]" data-no-turbolink="true">
+                  [%= item.name %]
+                </a>
+              </li>
+              [% }); %]
+            </ul>
+          </div>
+        </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/template" id="show-home-template">
+  <div class="col-xs-12">
+    <div>
+      <div class="row page-header-text">
+        <div class="col-xs-6">
+          <span class="page-title">ROOMS</span>
+        </div>
+
+        <div class="col-xs-6 text-right">
+            <button id="btn-add-room" class="btn btn-default btn-sm housepad-btn">
+              <i class="glyphicon glyphicon-plus housepad-glyphicon-primary"></i> NEW ROOM</button>
+
+          [% if (trade_client_completed == false) { %]
+            <button class="btn btn-default btn-sm housepad-btn btn-complete-project" data-id="[%= id %]">
+              <i class="glyphicon glyphicon-check"></i>&nbsp;Complete Project
+            </button>
+          [% } %]
+
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/template" id="home-rooms-template">
+  [% if (items.length > 0) { %]
+  <div class="col-xs-12" style="padding-top:20px">
+    <div class="alert rooms-feedback"></div>
+  </div>
+
+  <!--Rooms list-->
+  <div class="col-xs-12 rooms-container">
+    <table id="rooms-table" class="table table-condensed table-striped">
+      <thead>
+      <tr>
+        <th colspan="2" class="text-center">Room</th>
+        <th class="text-center">Lookbook</th>
+        <th class="text-center">Work in progress</th>
+        <th class="text-center">Active</th>
+        <th class="text-center">Care</th>
+        <th class="text-center">Invoice/Specs</th>
+        <th class="text-center">Warranty</th>
+        <th class="text-center">Digital Record Request<br>
+          <small>
+            <span class="separator">Pending</span> | <span class="separator">Received</span>
+          </small>
+        </th>
+        <th colspan="2">
+        </th>
+      </tr>
+      </thead>
+
+      [% _.each(items, function(room) { %]
+      [% var hasCounters = room.item_counters != undefined %]
+      <tr data-id="[%= room.id %]" class="trade-client-row">
+        <td>
+          <a href="/trade/projects/[%= room.house_id %]/rooms/[%=room.id%]"class="btn-link">
+            <div class="round-image pull-left">
+              [% if (room.first_image) { %]
+                 <img src='[%= room.first_image.image.thumb.url %]' aria-hidden="true" title="[%= room.title %]">
+              [% } else { %]
+                <div class="no-image" title="[%= room.title %]"></div>
+              [% } %]
+            </div>
+          </a>
+        </td>
+        <td class="text-left list-item">
+          <a href="/trade/projects/[%= room.house_id %]/rooms/[%=room.id%]"
+             class="btn-link">[%= room.title %]</a>
+        </td>
+
+        <!--Lookbook-->
+        <td class="text-center list-item">
+          <a href="/trade/projects/[%= room.house_id %]/rooms/[%=room.id%]/lookbook"
+              class="btn-link">[%= room.snapshots ? room.snapshots.length : 0%]</a>
+        </td>
+
+        <!--Work in progress-->
+        <td class="text-center list-item">
+          <a href="/trade/inventory?project=[%= room.house_id %]&room=[%=room.id%]&status=new"
+             class="btn-link">[%= hasCounters ? room.item_counters.new_items : '0'%]</a>
+        </td>
+
+        <!--Active-->
+        <td class="text-center list-item">
+          <a href="/trade/inventory?project=[%= room.house_id %]&room=[%=room.id%]&status=active"
+             class="btn-link">[%= hasCounters ? room.item_counters.active_items : '0'%]</a>
+        </td>
+
+        <!--Care-->
+        <td class="text-center list-item">
+          <a href="/trade/inventory?project=[%= room.house_id %]&room=[%=room.id%]&doc_type=3"
+             class="btn-link">[%= hasCounters ? room.item_counters.care : '0'%]</a>
+        </td>
+
+        <!-- Invoice-->
+        <td class="text-center list-item">
+          <a href="/trade/inventory?project=[%= room.house_id %]&room=[%=room.id%]&doc_type=2"
+             class="btn-link">[%= hasCounters ? room.item_counters.invoice_info : '0'%]</a>
+        </td>
+
+        <!--Warranty-->
+        <td class="text-center list-item">
+          <a href="/trade/inventory?project=[%= room.house_id %]&room=[%=room.id%]&doc_type=1"
+             class="btn-link">[%= hasCounters ? room.item_counters.warranty_info : '0'%]</a>
+        </td>
+
+        <!--Digital Record Request -->
+        <td class="text-center list-item">
+          <a href="/trade/inventory?project=[%= room.house_id %]&room=[%=room.id%]&status=pending"
+             class="btn-link separator ddr-status-pending">[%= hasCounters ? room.item_counters.pending_items : '0'%]
+          </a> | <a href="/trade/inventory?project=[%= room.house_id %]&room=[%=room.id%]&status=completed"
+             class="btn-link separator ddr-status-received">[%= hasCounters ? room.item_counters.completed_items : '0'%]</a>
+        </td>
+
+        <td class="text-right list-item">
+          <a class="btn-new-drr"
+             href="/trade/inventory-items/request-info?project=[%= room.house_id %]&room=[%= room.id %]" data-no-turbolink="true">
+            <img src="<%= asset_path("plus-button.png") %>"/> DRR</a>
+        </td>
+        <td class="text-right list-item">
+          <button class="btn btn-link btn-xs btn-delete-room" data-id="[%= room.id %]">
+            <img class="img-delete-row-item" src="<%= image_path('cross.png')%>"/></button>
+        </td>
+      </tr>
+      [% }); %]
+    </table>
+  </div>
+
+  <!--Pagination-->
+  <!--
+  <div class="text-center">
+    <ul class="pagination pagination-sm">
+      <li><a href="#">&laquo;</a></li>
+      <li><a href="#">1</a></li>
+      <li><a href="#">2</a></li>
+      <li><a href="#">3</a></li>
+      <li><a href="#">&raquo;</a></li>
+    </ul>
+  </div>
+  -->
+
+  <div class="col-xs-12" style="padding-top:20px">
+    <div class="alert rooms-feedback"></div>
+  </div>
+
+  [% } else { %]
+
+  <div class="col-xs-12 text-center">
+    There are no rooms for this home yet. Start by
+    <button class="btn btn-default btn-sm btn-add-room">creating a room</button>
+  </div>
+  [% } %]
+</script>
+
+<script type="text/template" id="new-room-template">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="modal-title">NEW ROOM</span>
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="<%= asset_path("cross.png")%>"/></button>
+    </div>
+    <div class="modal-body">
+      <div class="col-sm-8 col-sm-push-2">
+        <form role="form" class="form form-horizontal" id="form-new-client">
+
+          <!-- Clients list-->
+           <div class="form-group">
+             <div class="col-xs-12">
+                <select class="form-control" name="client_id" id="client_selector">
+                    <option value="[%=items.selected_client.id%]" selected="selected">
+                        [%= items.selected_client.first_name + ' ' + items.selected_client.last_name %]
+                    </option>
+                    [% _.each(items.other_clients, function(client) { %]
+                        <option value="[%=client.id%]">[%= client.first_name + ' ' + client.last_name %]</option>
+                    [% }); %]
+                </select>
+             </div>
+           </div>
+
+            <!-- Homes list-->
+            <div class="form-group">
+              <div class="col-xs-12" id="home_select_container">
+                <select class="form-control" name="house_id" id="client_id">
+                [% _.each(items.selected_client.houses, function(house) { %]
+                    [% if (house.id == items.selected_house.id) { %]
+                        <option value="[%=house.id%]" selected="selected">[%= house.name %]</option>
+                    [% } else { %]
+                        <option value="[%=house.id%]">[%= house.name %]
+                    [% } %]
+                [% }); %]
+                </select>
+              </div>
+            </div>
+
+          <!--Room name-->
+          <div class="form-group">
+            <div class="col-xs-12">
+              <input type="text" class="form-control" id="title" name="title" placeholder="Room name" value="">
+            </div>
+          </div>
+
+          <!--Feedback-->
+          <div class="form-group" id="new-room-progress" style="display:none;">
+            <div class="col-xs-12 text-center">
+              <img src="<%= asset_url('spinner.gif') %>" border="0" class="progress-spinner"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-12 text-left">
+              <div class="alert" id="new-room-feedback"></div>
+            </div>
+          </div>
+
+          <!-- Buttons-->
+          <div class="form-group">
+            <div class="col-xs-12">
+              <button type="submit" class="btn btn-primary col-xs-12 col-sm-4" id="btn-save-room">SAVE</button>
+              <button type="button" class="btn btn-default col-xs-12 col-sm-4 pull-right" data-dismiss="modal" aria-hidden="true">CANCEL</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        var Models = HousePad.TradeApp.module("Models");
+
+        <% HouseManagementApi::House.include_root_in_json = false %>
+        var house = new Models.House(<%= @house.to_json.html_safe %>);
+        var rooms = new Models.Rooms(<%= @house.rooms.to_json.html_safe %>);
+        var clients_with_house_data = new Models.TradeClient(<%= @clients_with_house_data.to_json.html_safe %>);
+
+        house.set("rooms", rooms);
+        house.set("clients_with_house_data", clients_with_house_data);
+
+        house.set("nest", {
+            auth_token: "<%= Rails.application.secrets.nest_access_token %>"
+        });
+
+        HousePad.TradeApp.start(
+        {
+            house: house,
+            current_user : get_current_user(<%= @user.to_json.html_safe %>)
+        });
+
+        //Start Homes module
+        HousePad.TradeApp.module("Homes.Show").start();
+
+        //Start routing
+        Backbone.history.start({pushState: true, hashChange: false, root: "/trade/"});
+    });
+</script>

@@ -1,0 +1,76 @@
+<script type="text/template" id="item-list-categories-template">
+  [% if (items.length > 0) { %]
+  <div class="form-group">
+    <h5 class="col-xs-12">Selected categories</h5>
+
+    <div class="row">
+      [% _.each(items, function(item) { %]
+      <div class="col-xs-12 item-category">
+        <span class="col-xs-6">[%= item.name %]</span>
+        <div class="col-xs-6 delete-item-category-container text-right">
+          <button class="btn btn-xs btn-danger delete-item-category" data-id="[%= item.id %]">DEL</button>
+        </div>
+      </div>
+      [% }); %]
+    </div>
+  </div>
+  [% } %]
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="alert" style="display:none;margin-top:10px;" role="alert" id="item-categories-feedback"></div>
+    </div>
+  </div>
+</script>
+
+<script type="text/template" id="item-add-categories-template">
+  <div class="row">
+    [% if (categories != null && categories.length > 0) { %]
+    [% var current_cat = null; %]
+
+    <div class="col-xs-12 col-sm-4">
+      <div class="list-group">
+        [% _.each(categories, function(cat) { var selected = false; %]
+        [% if (selected_categories.length > 0 && selected_categories[0].id == cat.id) { %]
+        [% current_cat = cat; selected = true; %]
+        [% } %]
+        <button type="button" class="[%= (selected == true ? 'current-category' : '')%] list-group-item select-category"
+                data-id="[%= cat.id %]" data-level="0">[%= cat.name %]</button>
+        [% }); %]
+      </div>
+    </div>
+
+    [% if (selected_categories.length > 0 && current_cat != null) { %]
+    [% for (var i=0; i < selected_categories.length; i++){ %]
+    <div class="col-xs-12 col-sm-4">
+      <div class="list-group">
+        [% _.each(current_cat.descendants, function(cat) { var selected = false; %]
+        [% if (selected_categories.length >(i+1) && selected_categories[i+1].id == cat.id) { %]
+        [% current_cat = cat; selected = true; %]
+        [% } %]
+        <button type="button" class="[%= (selected == true ? 'current-category' : '')%] list-group-item select-category"
+                data-id="[%= cat.id %]" data-level="[%= (i+1) %]">[%= cat.name %]</button>
+        [% }); %]
+      </div>
+    </div>
+    [%      } %]
+    [%  } %]
+    [% } %]
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      [% if (selected_categories.length == 0) { %]
+      <button class="btn btn-primary btn-sm" id="save-category" disabled='disabled'>Add</button>
+      [% } else { %]
+      <button class="btn btn-primary btn-sm" id="save-category">Add</button>
+      [% } %]
+    </div>
+  </div>
+
+  <div class="row" style="padding-top:10px;">
+    <div class="col-xs-12">
+      <div class="alert" style="display:none;" role="alert" id="item-add-categories-feedback"></div>
+    </div>
+  </div>
+</script>

@@ -1,0 +1,187 @@
+<script type="text/template" id="client-details-template">
+  <% if false %>
+      <div class="col-xs-12" style="padding-top:30px;">
+        <%= render "layouts/trade_nav" %>
+      </div>
+  <%end%>
+
+  <div class="col-xs-12 box" id="show-client-container"></div>
+
+  <div class="col-xs-12 box" id="client-homes-container"></div>
+
+  <div class="modal fade" id="new-home-modal"></div>
+
+</script>
+
+
+<script type="text/template" id="show-client-template">
+    <div class="col-xs-12">
+        <div class="row">
+          <div class="col-xs-8 client-details">
+            <span class="page-header-text">
+              [%= trade_client.first_name %] [%= trade_client.last_name %]
+            </span>
+            <p>
+              <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+              <a href="tel:[%= trade_client.phone %]">[%= trade_client.phone %]</a>
+              [% if(trade_client.email){ %]
+              <br/>
+              <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+              <a href="mailto:[%= trade_client.email %]">[%= trade_client.email %]</a>
+              [% } %]
+          </div>
+
+        <div class="col-xs-4 text-right">
+            <span>
+                <a href="/trade/clients" class="btn btn-primary btn-sm btn-block btn-all-clients">ALL CLIENTS</a>
+            </span>
+        </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="client-homes-template">
+
+  <!--Header-->
+  <div class="col-xs-12">
+    <div>
+      <div class="row page-header-text">
+        <div class="col-xs-6">
+          <span class="page-title">HOMES</span>
+        </div>
+           <div class="col-xs-6 text-right">
+             <button class="btn btn-default btn-sm btn-add-home"><i class="glyphicon glyphicon-home"></i> ADD HOME</button>
+             <button class="btn btn-default btn-sm btn-delete-mode"><i class="glyphicon glyphicon-edit"></i> EDIT</button>
+           </div>
+      </div>
+    </div>
+  </div>
+
+  [% if (items.length > 0) { %]
+
+  <div class="col-xs-12">
+    <div class="alert homes-feedback"></div>
+  </div>
+
+  <div class="col-xs-12">
+
+    <div class="row">
+      [% _.each(items, function(house) { %]
+      <div class="col-sm-6 col-md-4">
+        <div class="house-tile text-center">
+          <div class="col-xs-12 text-right">
+            [% if(house.edit_mode == true) {%]
+            <img src="<%= asset_path("cross.png"); %>" class="btn-delete-home" data-id="[%= house.id %]"/>
+            [% } %]
+          </div>
+
+          <div class="new-tile-image">
+            <a href="/trade/clients/[%= house.client_id %]/projects/[%= house.id %]">
+              <span class="glyphicon glyphicon-home home-icon"></span>
+            </a>
+            <br/>
+            <a href="/trade/clients/[%= house.client_id %]/projects/[%= house.id %]">[%= house.name %]</a>
+          </div>
+        </div>
+      </div>
+      [% }); %]
+    </div>
+
+  </div>
+
+  <div class="col-xs-12" style="padding-top:10px">
+    <div class="alert homes-feedback"></div>
+  </div>
+
+  [% } else { %]
+  <div class="row">
+        <div class="col-xs-12 text-center">
+            <div class="alert alert-info">There are no homes for this client yet. Start by
+                <span class="btn-link btn-add-home">creating a home</span>
+            </div>
+        </div>
+      </div>
+
+      [% } %]
+
+</script>
+
+<script type="text/template" id="new-home-template">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="modal-title">ADD NEW PROJECT</span>
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="<%= asset_path("cross.png")%>"/></button>
+    </div>
+    <div class="modal-body">
+      <div class="col-sm-8 col-sm-push-2">
+        <form role="form" class="form form-horizontal" id="form-new-home">
+
+          <!-- Clients list-->
+          <div class="form-group">
+            <div class="col-xs-12">
+              <select class="form-control" name="client_id" id="client_id">
+                [% _.each(items, function(client) { %]
+                    [% if(client.is_current){ %]
+                    <option value="[%=client.id%]" selected="selected" >[%= client.first_name + ' ' + client.last_name %]</option>
+                    [% } else { %]
+                    <option value="[%=client.id%]">[%= client.first_name + ' ' + client.last_name %]</option>
+                    [% } %]
+                [% }); %]
+              </select>
+            </div>
+          </div>
+          <!--Project name-->
+          <div class="form-group">
+            <div class="col-xs-12">
+              <input type="text" class="form-control" id="name" name="name" placeholder="Project Name" value="">
+            </div>
+          </div>
+
+          <!--Feedback-->
+          <div class="form-group" id="new-home-progress" style="display:none;">
+            <div class="col-xs-12 text-center">
+              <img src="<%= asset_url('spinner.gif') %>" border="0" class="progress-spinner"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-12 text-left">
+              <div class="alert" id="new-home-feedback"></div>
+            </div>
+          </div>
+
+          <!-- Buttons-->
+          <div class="form-group">
+            <div class="col-xs-12">
+              <button type="submit" class="btn btn-primary col-xs-12 col-sm-5 pull-right" id="btn-save-home">SAVE PROJECT
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        var Models = HousePad.TradeApp.module("Models");
+        var current_user = get_current_user(<%= @user.to_json.html_safe %>);
+
+        var trade_client = new Models.TradeClient(<%= @client.to_json.html_safe %>);
+        var houses = new Models.Houses(<%= @client.houses.to_json.html_safe %>);
+        trade_client.get("trade_client").houses = houses;
+
+        // All clients
+        var trade_clients = new Models.TradeClients(<%= @json_clients.to_json.html_safe %>);
+
+        HousePad.TradeApp.start({current_user: current_user, trade_client: trade_client, trade_clients : trade_clients});
+
+        //Start Clients module
+        HousePad.TradeApp.module("Clients").start();
+
+        //Start routing
+        Backbone.history.start({pushState: true, hashChange: false, root: "/trade/"});
+    });
+
+</script>

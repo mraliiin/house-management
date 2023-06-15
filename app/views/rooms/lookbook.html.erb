@@ -1,0 +1,51 @@
+<script type="text/template" id="room-template">
+  <div class="col-xs-12" id="room-header-container"></div>
+  <div class="col-xs-12" id="breadcrumbs-container"></div>
+  <div class="col-xs-12" id="room-lookbook-container"></div>
+  <div class="col-xs-12" id="room-images-container"></div>
+  <div class="modal fade" id="room-image-modal"></div>
+</script>
+
+<%= render "room_header" %>
+
+<%= render "rooms/lookbook/breadcrumbs" %>
+
+<%= render "rooms/lookbook/images_list" %>
+
+<%= render "rooms/lookbook/image" %>
+
+<script type="text/template" id="room-lookbook-template">
+  <div class="col-xs-12 text-right">
+    <button class="btn btn-default btn-sm housepad-btn btn-delete-mode">Edit</button>
+  </div>
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        var Models = HousePad.TradeApp.module("Models");
+
+        <% HouseManagementApi::Room.include_root_in_json = false %>
+        var room = new Models.Room(<%= @room.to_json.html_safe %>);
+        var clients_with_house_data = new Models.TradeClient(<%= @clients_with_house_data.to_json.html_safe %>);
+        room.set("clients_with_house_data", clients_with_house_data);
+
+        var snapshots = new Models.RoomImages(<%= @room.snapshots.to_json.html_safe %>);
+        room.set("snapshots", snapshots);
+        _.each(room.get("snapshots").models, function (snapshot) {
+            var snapshot_notes = new Models.RoomImageNotes(snapshot.get("snapshot_notes"));
+            snapshot.set("snapshot_notes", snapshot_notes);
+        });
+
+        HousePad.TradeApp.start(
+        {
+            room: room,
+            current_user: get_current_user(<%= @user.to_json.html_safe %>)
+        });
+
+        //Start Rooms module
+        HousePad.TradeApp.module("Rooms.Lookbook").start();
+
+        //Start routing
+        Backbone.history.start({pushState: true, hashChange: false, root: "/trade/"});
+    });
+</script>

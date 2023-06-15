@@ -1,0 +1,200 @@
+<script type="text/template" id="measurements-template">
+  <div class="col-xs-12" id="item-add-default-measurements-container"></div>
+  <div class="col-xs-12" id="item-add-extra-measurements-container"></div>
+</script>
+
+<script type="text/template" id="item-add-default-measurements-template">
+  [% if (measurements != null) { %]
+  [% var selected_unit_type = measurements.selected_unit_type || measurements.unit_types[0]; %]
+
+  <!--Systems of measurement-->
+  <div class="row">
+    <div class="col-xs-6">
+      <h4>Measurement System</h4>
+    </div>
+    <div class="col-xs-6">
+      <div class="list-group">
+        <select class="form-control" name="system_id" id="system_id">
+          [% _.each(measurements.systems_of_measurement, function(s) { %]
+            <option value="[%= s %]" [%= s.toLowerCase() == measurements.system_type ? "selected='selected'" : ''%]>[%= s %]</option>
+          [% }); %]
+        </select>
+      </div>
+    </div>
+  </div>
+
+  [% if( measurements.unit_types_by_category ) { %]
+  <div class="box">
+    [% _.each(measurements.unit_types_by_category, function(ut) { %]
+    [% _.each(ut.dimension_types, function(d) { %]
+    <form name="dimensions_form">
+      <div class="row">
+        <!-- Unit type-->
+        <input type="hidden" name="unit_type_id" value="[%= ut.id %]"/>
+
+        <!-- Dimension type -->
+        <div class="col-xs-3">
+          <div class="list-group">
+            <input type="hidden" name="dimension_type_id" value="[%= d.id %]"/>
+            <input type="hidden" name="dimension_type_name" value="[%= d.name %]"/>
+            <span class="dimension-label">[%= d.name %]</span>
+          </div>
+        </div>
+
+        <!-- Input Value -->
+        <div class="col-xs-3">
+          <div class="list-group">
+            <input type="text" class="form-control" name="dimension_value" type="number"
+                   value="[%= d.dimension_value %]" placeholder="Value"/>
+          </div>
+        </div>
+
+        <!-- Fractions -->
+        <div class="col-xs-3">
+          <div class="list-group">
+            <select class="form-control" name="fraction_id">
+              <option value="" class="list-group-item"></option>
+              [% _.each(measurements.fractions, function(f) { %]
+                <option value="[%= f.id %]" class="list-group-item">[%= f.name %]</option>
+              [% }); %]
+            </select>
+          </div>
+        </div>
+
+        <!-- Units -->
+        <div class="col-xs-3">
+          <div class="list-group">
+            <select class="form-control" name="unit_id">
+              [% _.each(ut.units, function(unit) { %]
+                  [% if (unit.system == measurements.system_type) { %]
+                    <option value="[%= unit.id %]" class="list-group-item">[%= unit.name %]</option>
+                  [% } %]
+              [% }); %]
+            </select>
+          </div>
+        </div>
+      </div>
+    </form>
+    [% }); %]
+    [% }); %]
+  </div>
+  [% } %]
+  [% } %]
+</script>
+
+<!--List with available measurements-->
+<script type="text/template" id="item-add-extra-measurements-template">
+  [% if (measurements && measurements.unit_types.length) { %]
+  [% var selected_unit_type = measurements.selected_unit_type || measurements.unit_types[0]; %]
+
+  <div class="box">
+    <h4>Additional measurements</h4>
+
+    <form name="extra_dimensions_form">
+      <input type="hidden" name="isNew" value="true"/>
+
+      <div class="row">
+        <!-- Unit types -->
+        <div class="col-xs-6">
+          <div class="list-group">
+            <select class="form-control" name="unit_type_id" id="unit_type_id">
+              [% _.each(measurements.unit_types, function(t) { %]
+              <option value="[%= t.id %]" class="list-group-item"
+                      [%=selected_unit_type.id == t.id ? "selected='selected'" : ''%]>[%= t.name %]</option>
+              [% }); %]
+            </select>
+          </div>
+        </div>
+
+        <!-- Dimension types -->
+        <div class="col-xs-6">
+          <div class="list-group">
+            <select class="form-control" name="dimension_type_id" id="dimension_type_id">
+              [% _.each(selected_unit_type.dimension_types, function(d) { %]
+                <option value="[%= d.id %]" class="list-group-item">[%= d.name %]</option>
+              [% }); %]
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Input Value -->
+        <div class="col-xs-6">
+          <div class="list-group">
+            <input type="text" class="form-control" id="dimension_value" name="dimension_value" placeholder="Value" value="">
+          </div>
+        </div>
+
+        <!-- Fractions -->
+        <div class="col-xs-3">
+          <div class="list-group">
+            <select class="form-control" name="fraction_id" id="fraction_id">
+              <option value="" class="list-group-item"></option>
+              [% _.each(measurements.fractions, function(f) { %]
+                <option value="[%= f.id %]" class="list-group-item">[%= f.name %]</option>
+              [% }); %]
+            </select>
+          </div>
+        </div>
+
+        <!-- Units -->
+        <div class="col-xs-3">
+          <div class="list-group">
+            <select class="form-control" name="unit_id" id="unit_id">
+              [% _.each(selected_unit_type.units, function(u) { %]
+                  [% if (u.system == measurements.system_type) { %]
+                    <option value="[%= u.id %]" class="list-group-item">[%= u.name %]</option>
+                  [% } %]
+              [% }); %]
+            </select>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <button class="btn btn-primary btn-sm" id="save-measurement" disabled='disabled'>Add</button>
+    </div>
+  </div>
+
+  <div class="row" style="padding-top:10px;">
+    <div class="col-xs-12">
+      <div class="alert" style="display:none;" role="alert" id="item-add-measurements-feedback"></div>
+    </div>
+  </div>
+  [% } %]
+</script>
+
+<!--List with current item measurements-->
+<script type="text/template" id="item-list-measurements-template">
+  [% if (items.current_measurements && items.current_measurements.length > 0) { %]
+  <div class="form-group">
+    <h4 class="col-xs-12">Current measurements</h4>
+
+    <div class="row">
+      [% _.each(items.current_measurements, function(item) { %]
+          [% if(!item.isDeleted) { %]
+              <div class="col-xs-12 item-category">
+                <span class="col-xs-3">[%= item.dimension_type_name %]</span>
+                <span class="col-xs-3">[%= item.dimension_value %] [%= item.fraction_name %]</span>
+                <span class="col-xs-3">[%= item.unit_name %]</span>
+
+                <div class="col-xs-3 delete-item-container text-right">
+                  <button class="btn btn-xs btn-danger delete-item-measurement" data-id="[%= item.dimension_type_id %]">DEL</button>
+                </div>
+              </div>
+          [% } %]
+      [% }); %]
+    </div>
+  </div>
+  [% } %]
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="alert" style="display:none;margin-top:10px;" role="alert" id="item-measurements-feedback"></div>
+    </div>
+  </div>
+</script>

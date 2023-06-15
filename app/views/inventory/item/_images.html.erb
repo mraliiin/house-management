@@ -1,0 +1,52 @@
+<script type="text/template" id="item-add-images-template">
+  <div class="row">
+
+    <div class="col-xs-12">
+      <div id="item-image-preview-template" class="file-row">
+        <div>
+          <span class="preview"><img class="image" data-dz-thumbnail/></span>
+        </div>
+        <div>
+          <p class="name" data-dz-name></p>
+
+          <p class="size" data-dz-size></p>
+        </div>
+        <div>
+          <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12">
+      <div class="alert" style="display:none;" role="alert" id="item-image-upload-feedback"></div>
+    </div>
+
+    <div class="col-xs-12 text-center" id="inventory-item-images-dropzone">
+      Drag images here or click to upload
+    </div>
+
+  </div>
+</script>
+
+
+<script type="text/template" id="item-list-images-template">
+  [% if (items.length > 0) { %]
+  <div class="col-xs-12" id="item-images-sortable">
+    [% _.each(items, function(item) { %]
+    <div class="edit-item-thumbnail-container" data-id="[%= item.id %]">
+      <div class="delete-item-image-container">
+        <img src="<%= asset_path("cross.png") %>" class="delete-item-image" data-id="[%= item.id %]"/>
+      </div>
+      <div class="edit-item-thumbnail">
+        <img src="[%= item.image.thumbnail.url %]" class="edit-item-thumbnail-img" data-id="[%= item.id %]"/>
+      </div>
+    </div>
+    [% }); %]
+  </div>
+  <div class="col-xs-12">
+    <div class="alert" style="display:none;" role="alert" id="item-images-feedback"></div>
+  </div>
+  [% } %]
+</script>

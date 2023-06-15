@@ -1,0 +1,110 @@
+// Place all the styles related to the Settings controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+#settings-menu-container {
+  padding-top:20px;
+}
+
+#account-details-container {
+  padding-top:30px;
+}
+
+
+#billing-container {
+  padding-top:50px;
+  font-size: 40px;
+  line-height:50px;
+  color: #ddd;
+}
+
+
+#account-info-progress img {
+  height: 20px;
+}
+
+#avatar-progress img {
+  height: 20px;
+}
+
+
+#btn-change-avatar {
+  margin-top:10px;
+}
+
+#avatar-placeholder
+{
+  vertical-align: middle;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+#avatar img {
+  max-width: 150px;
+  max-height: 150px;
+}
+
+#avatar  {
+  display: table;
+  margin: auto;
+  width: 150px;
+  height: 150px;
+  line-height:150px;
+}
+
+#avatar-preview-template p.name, #avatar-preview-template p.size, #avatar-preview-template img.image {
+  display: none;
+}
+
+#avatar-preview-template .progress {
+  height: 5px !important;
+  margin-bottom: 0 !important;
+}
+
+#avatar-actions {
+  padding-top: 10px;
+}
+
+
+#payment-info-modal{
+  margin: auto;
+  @media (max-width: 767px) {
+    width: 90%;
+  }
+
+  @media (min-width: 768px) {
+    width: 70%;
+  }
+}
+
+#payment-method-progress {
+  padding-top:10px;
+}
+
+#feedback-payment-method {
+  padding-top:10px;
+}
+
+
+.braintree-plan {
+  cursor:pointer;
+
+  &.active {
+    background-color: #337ab7;
+    color: #fff;
+  }
+}
+
+
+#plan-progress, #payment-method-progress, #confirm-subscription-progress {
+  width: 20px;
+}
+
+#btn-back-to-payment, #btn-confirm-subscription {
+  cursor: pointer;
+}
+
+.credit_card_img {
+  height: 20px;
+}

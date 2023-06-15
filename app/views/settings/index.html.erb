@@ -1,0 +1,170 @@
+<script type="text/template" id="settings-template">
+  <div class="col-xs-12" id="settings-menu-container"></div>
+  <div class="col-xs-12" id="settings-main-container"></div>
+</script>
+
+<script type="text/template" id="settings-menu-template">
+  <div class="col-xs-12">
+    <ul class="nav nav-tabs">
+      <li role="presentation" class="active"><a href="/trade/settings/account-details" id="nav-settings-account-details">Account Details</a></li>
+      <li role="presentation"><a href="/trade/settings/billing" id="nav-settings-billing">Billing</a></li>
+    </ul>
+  </div>
+</script>
+
+
+<script type="text/template" id="settings-billing-template">
+  <div class="col-xs-12 text-center" id="billing-container">Billing</div>
+</script>
+
+
+<script type="text/template" id="account-details-template">
+  <div class="col-xs-12 text-center" style="padding-top:20px;">
+    <div class="row">
+
+      <div class="col-xs-12 col-sm-4 text-center" id="avatar-container"></div>
+
+      <div class="col-xs-12 col-sm-8" id="account-info-container"></div>
+
+    </div>
+  </div>
+</script>
+
+
+<script type="text/template" id="avatar-template">
+  <div id="avatar">
+
+    [% if (current_user.avatar.thumb.url) { %]
+    <img src="[%= current_user.avatar.thumb.url %]"/>
+    [% } else { %]
+    <div id="avatar-placeholder">No avatar</div>
+    [% } %]
+
+  </div>
+
+  <button class="btn btn-default btn-sm" id="btn-change-avatar">Upload new picture</button>
+
+  <div>
+    <div id="avatar-preview-template" class="file-row">
+      <!-- This is used as the file preview template -->
+      <div>
+        <span class="preview"><img class="image" data-dz-thumbnail /></span>
+      </div>
+      <div>
+        <p class="name" data-dz-name></p>
+        <p class="size" data-dz-size></p>
+      </div>
+      <div>
+        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12" id="avatar-actions" style="display:none;">
+      <button class="btn btn-xs btn-primary" id="btn-save-avatar">Save</button>
+      <button class="btn btn-xs btn-primary" id="btn-reset-avatar">Cancel</button>
+    </div>
+  </div>
+
+  <div class="row" id="avatar-progress" style="display:none;">
+    <div class="col-xs-12 text-center">
+      <img src="<%= asset_url("spinner.gif") %>" border="0" class="progress-spinner"/>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-6 col-sm-offset-3" style="padding-top:10px;">
+      <div class="alert" id="avatar-feedback"></div>
+    </div>
+  </div>
+
+
+</script>
+
+
+<script type="text/template" id="account-info-template">
+  <form role="form" class="form form-horizontal" id="form-account-details">
+    <div class="form-group">
+      <label for="first_name" class="col-xs-12 col-sm-3 text-left control-label">First name</label>
+      <div class="col-xs-12 col-sm-6">
+        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First name" value="[%= current_user.first_name %]">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="last_name" class="col-xs-12 col-sm-3 text-left control-label">Last name</label>
+      <div class="col-xs-12 col-sm-6">
+        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last name" value="[%= current_user.last_name %]">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email" class="col-xs-12 col-sm-3 text-left control-label">Email</label>
+      <div class="col-xs-12 col-sm-6">
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="[%= current_user.email %]">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phone" class="col-xs-12 col-sm-3 text-left control-label">Phone</label>
+      <div class="col-xs-12 col-sm-6">
+        <input type="phone" class="form-control" id="phone" name="phone" placeholder="Phone" value="[%= current_user.phone %]">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-3 col-sm-9 col-xs-12 text-left">
+        <button type="submit" class="btn btn-primary" id="btn-update-account-details">Update</button>
+        <button type="button" class="btn btn-default" id="btn-reset-account-details">Reset</button>
+      </div>
+    </div>
+
+    <div class="form-group" id="account-info-progress" style="display:none;">
+      <div class="col-sm-offset-3 col-sm-9 col-xs-12 text-center">
+        <img src="<%= asset_url("spinner.gif") %>" border="0" class="progress-spinner"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-3 col-sm-9 col-xs-12 text-left">
+        <div class="alert" id="account-info-feedback"></div>
+      </div>
+    </div>
+  </form>
+</script>
+
+
+
+<script type="text/javascript">
+    $(function(){
+
+        //Start app
+        //The app receives the current user model
+        var Models = HousePad.TradeApp.module("Models");
+        var current_user = new Models.User({
+                                                id: "<%= @user.id %>",
+                                                first_name: "<%= @user.first_name.html_safe %>",
+                                                last_name: "<%= @user.last_name.html_safe %>",
+                                                email: "<%= @user.email.html_safe %>",
+                                                phone: "<%= @user.phone.html_safe %>",
+                                                avatar: {
+                                                            url: "<%= @user.avatar.url ? @user.avatar.url.html_safe : "" %>",
+                                                            thumb: {
+                                                                url: "<%= @user.avatar.thumb.url ? @user.avatar.thumb.url.html_safe : "" %>"
+                                                            }
+                                                        }
+                                            });
+        HousePad.TradeApp.start({current_user: current_user});
+
+        //Start Settings module
+        HousePad.TradeApp.module("Settings").start();
+
+        //Start routing
+        Backbone.history.start({pushState: true, hashChange: false, root: "/trade/"});
+    });
+
+</script>
+

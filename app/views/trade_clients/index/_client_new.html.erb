@@ -1,0 +1,45 @@
+<script type="text/template" id="new-client-template">
+  <div class="col-sm-8 col-sm-offset-2">
+    <form role="form" class="form form-horizontal" id="form-new-client">
+      <div class="form-group">
+        <div class="col-xs-12">
+          <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name" value="[%= (typeof(first_name) == 'string' ? first_name : '') %]">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-xs-12">
+          <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" value="[%= typeof(last_name) == 'string' ? last_name : ''%]">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-xs-12">
+          <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="[%= (typeof(email) == 'string' ? email : '') %]">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-xs-12">
+          <input type="phone" class="form-control" id="phone" name="phone" placeholder="Phone" value="[%= (typeof(phone) == 'string' ? phone : '') %]">
+        </div>
+      </div>
+
+      <!--Feedback-->
+      <div class="form-group" id="new-client-progress" style="display:none;">
+        <div class="col-xs-12 text-center">
+          <img src="<%= asset_url('spinner.gif') %>" border="0" class="progress-spinner"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-xs-12 text-left">
+          <div class="alert" id="new-client-feedback"></div>
+        </div>
+      </div>
+
+      <div>
+        <button type="submit" class="btn btn-primary col-xs-12 col-sm-4 pull-right" id="btn-save-new-client">SAVE</button>
+      </div>
+    </form>
+  </div>
+</script>

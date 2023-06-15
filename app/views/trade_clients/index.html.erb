@@ -1,0 +1,83 @@
+<script type="text/template" id="clients-template">
+  <%= render "trade_clients/index/header" %>
+
+  <div class="col-xs-12">
+    <ul class="nav nav-tabs">
+      <li><a data-toggle="tab" href="#clientsList">Clients List</a></li>
+      <li class="active"><a data-toggle="tab" href="#newDdr" id="ddrEditor">New DRR</a></li>
+      <li><a data-toggle="tab" href="#newClient" id="clientEditor">New Client</a></li>
+    </ul>
+  </div>
+
+  <div class="tab-content">
+    <div id="clientsList" class="tab-pane fade">
+      <div class="col-xs-12" id="clients-list-container"></div>
+    </div>
+
+    <div id="newDdr" class="tab-pane fade in active">
+      <div class="col-xs-8 col-xs-offset-2" id="inventory-request-info"></div>
+    </div>
+
+    <div id="newClient" class="tab-pane fade">
+      <div class="col-xs-12" id="client-new-container"></div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="clients-modal"></div>
+
+  <div class="page-overlay" id="page-overlay">
+    <img src="<%= asset_url('spinner.gif') %>" border="0" class="progress-spinner"/>
+  </div>
+</script>
+
+<%= render "trade_clients/index/clients_list" %>
+
+<%= render "trade_clients/index/client_details" %>
+
+<%= render "trade_clients/index/client_new" %>
+
+<%= render "trade_clients/index/client_new_modal" %>
+
+<%= render "inventory/ddr_request_info" %>
+
+<!--TODO ???-->
+<%= render "trade_clients/index/project_new" %>
+
+
+<script type="text/javascript">
+    $(function () {
+        var Models = HousePad.TradeApp.module("Models");
+        var trade_clients = new Models.TradeClients(<%= @json_clients.to_json.html_safe %>);
+        for (var i = 0; i < trade_clients.length; i++) {
+            var trade_client = trade_clients.at(i);
+            trade_client.set("houses", new Models.Houses(trade_client.get("houses")));
+        }
+
+        var all_item_sections = new Models.InventoryItemSections(<%= @all_item_sections.to_json.html_safe %>);
+        var ddr_breadcrumb_data = new Models.TradeClient(<%= @ddr_breadcrumb_data.to_json.html_safe %>);
+        var inventory_item = new Models.InventoryItem({"house_list_data": ddr_breadcrumb_data });
+
+        // Later will add the item current_sections
+        inventory_item.set("all_item_sections", all_item_sections);
+
+        HousePad.TradeApp.start(
+        {
+            inventory_item: inventory_item,
+            trade_clients: trade_clients,
+            current_user: get_current_user(<%= @user.to_json.html_safe %>),
+        });
+
+        // Start Clients module
+        HousePad.TradeApp.module("Clients").start();
+
+        // Start routing
+        Backbone.history.start({pushState: true, hashChange: false, root: "/trade/"});
+
+        // Load DDR tab
+        Backbone.Radio.command("clients", "ddr-new");
+
+        $('#clientEditor').click(function(){
+            Backbone.Radio.command("clients", "load-new");
+        });
+    });
+</script>

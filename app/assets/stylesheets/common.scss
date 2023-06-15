@@ -1,0 +1,79 @@
+/*New Form Modals*/
+.modal-dialog {
+
+  .modal-content {
+    border-radius: 0 !important;
+
+    .modal-header {
+      padding: 0 0 20px 0 !important;
+      border-bottom: 0;
+
+
+      .modal-title {
+        width: auto;
+        padding: 8px 16px;
+        font-size: 15px;
+        font-weight: 200;
+        color: #fff;
+        background-color: #3f9ed4;
+        border-color: #3f9ed4;
+        display: inline-block;
+      }
+
+      button.close {
+        padding: 10px;
+
+        img {
+          height: 20px;
+        }
+      }
+    }
+  }
+
+  .alert {
+    margin-bottom: 0;
+  }
+
+//  input, select {
+//    -webkit-box-shadow: 1px 1px 10px 1px rgba(184,178,184,1);
+//    -moz-box-shadow: 1px 1px 10px 1px rgba(184,178,184,1);
+//    box-shadow: 1px 1px 10px 1px rgba(184,178,184,1);
+//  }
+
+  button.btn {
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+  }
+
+  button.btn-primary {
+    background-color: #3F9ED4;
+    margin-bottom: 5px;
+  }
+}
+
+
+
+.housepad-btn {
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+
+.housepad-btn-primary {
+  background-color: #3F9ED4;
+
+  &:hover {
+    background-color: #337ab7;
+  }
+}
+
+.housepad-glyphicon-primary {
+  color: #3F9ED4;
+}
+
+
+.img-delete-row-item {
+  height: 16px;
+}
+

@@ -1,0 +1,48 @@
+<script type="text/template" id="room-template">
+  <div class="col-xs-12" id="room-header-container"></div>
+  <div class="col-xs-12" id="breadcrumbs-container"></div>
+  <div class="col-xs-12" id="room-details-container"></div>
+</script>
+
+<%= render "room_header" %>
+
+<%= render "rooms/lookbook/breadcrumbs" %>
+
+<script type="text/template" id="room-details-template">
+
+  <div class="col-xs-12">
+    [% if(description_edit_mode == true) {%]
+        <textarea class="form-control input-room-description">[%= description %]</textarea>
+        <span class="glyphicon glyphicon-ok btn-update-room-description"></span>
+        <span class="glyphicon glyphicon-remove btn-cancel-update-description"></span>
+    [%} else {%]
+        [% if (typeof(description) != "undefined" && description) { %]
+            [%= description.replace(/(\n)+/g, '<br />') %]
+        [% } %]
+        <span class="glyphicon glyphicon-pencil btn-edit-room-description"></span>
+    [% } %]
+
+  </div>
+
+</script>
+
+<script type="text/javascript">
+    $(function(){
+        var Models = HousePad.TradeApp.module("Models");
+
+        <% HouseManagementApi::Room.include_root_in_json = false %>
+        var room = new Models.Room(<%= @room.to_json.html_safe %>);
+
+        var clients_with_house_data = new Models.TradeClient(<%= @clients_with_house_data.to_json.html_safe %>);
+        room.set("clients_with_house_data", clients_with_house_data);
+
+        HousePad.TradeApp.start({room: room});
+
+        //Start Rooms details module
+        HousePad.TradeApp.module("Rooms.Details").start();
+
+        //Start routing
+        Backbone.history.start({pushState: true, hashChange: false, root: "/trade/"});
+    });
+
+</script>

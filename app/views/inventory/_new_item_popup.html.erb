@@ -1,0 +1,219 @@
+<script type="text/template" id="edit-inventory-item-template">
+  <div class="modal-content modal-form">
+    <div class="modal-header">
+      <span class="modal-title">NEW ITEM</span>
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="<%= asset_path("cross.png")%>"/></button>
+    </div>
+    <div class="modal-body">
+      <div class="col-sm-10 col-sm-push-1 accordion horizontal">
+        <form class="form form-horizontal" role="form" id="item-form">
+          <div class="accordion horizontal">
+
+            <div class="row" id="item-title-container"></div>
+
+            <section id="acc_item_images">
+              <h3><a href="#acc_item_images">Item Images</a></h3>
+              <div class="row" id="item-list-images-container"></div>
+              <div class="row" id="item-add-images-container"></div>
+            </section>
+
+            <section id="acc_item_categories">
+              <h3><a href="#acc_item_categories">Categories</a></h3>
+              <div class="row" id="item-add-categories-container"></div>
+              <div class="row" id="item-list-categories-container"></div>
+            </section>
+
+            <section id="acc_item_measurements">
+              <h3><a href="#acc_item_measurements">Measurements</a></h3>
+              <div class="row" id="item-list-measurements-container"></div>
+              <div class="row" id="item-add-measurements-container"></div>
+            </section>
+
+            <section id="acc_item_conditions">
+              <h3><a href="#acc_item_conditions">Conditions</a></h3>
+              <div class="row" id="item-list-conditions-container"></div>
+              <div class="row" id="item-add-conditions-container"></div>
+            </section>
+
+            <section id="acc_item_periods">
+              <h3><a href="#acc_item_periods">Periods</a></h3>
+              <div class="row" id="item-list-periods-container"></div>
+              <div class="row" id="item-add-periods-container"></div>
+            </section>
+
+            <section id="acc_item_care">
+              <h3><a href="#acc_item_care">Care Info</a></h3>
+              <div class="row" id="item-care-container"></div>
+            </section>
+
+            <section id="acc_item_invoice">
+              <h3><a href="#acc_item_invoice">Invoice info</a></h3>
+              <div class="row" id="item-invoice-container"></div>
+            </section>
+
+            <section id="acc_item_warranty">
+              <h3><a href="#acc_item_warranty">Warranty info</a></h3>
+              <div class="row" id="item-warranty-container"></div>
+            </section>
+
+            <div class="row" id="item-save-container"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</script>
+
+<script type="text/template" id="item-title-template">
+  <div class="form-group">
+    <div class="col-xs-12">
+      [% if (typeof(title) != 'undefined') { %]
+      <input type="text" name="inventory_item[title]" id="item-title" class="form-control" placeholder="Enter item title" value="[%=  title  %]">
+      [% } else { %]
+      <input type="text" name="inventory_item[title]" id="item-title" class="form-control" placeholder="Enter item title">
+      [% } %]
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-xs-12">
+      <textarea name="inventory_item[description]" id="item-description" class="form-control"
+        placeholder="Enter item description" rows="3">[%= typeof(description) != "undefined" ? description : "" %]</textarea>
+    </div>
+  </div>
+</script>
+
+
+<%= render partial: "inventory/item/images"%>
+
+<%= render partial: "inventory/item/categories"%>
+
+<%= render partial: "inventory/item/conditions"%>
+
+<%= render partial: "inventory/item/periods"%>
+
+<%= render partial: "inventory/item/measurements"%>
+
+<%= render partial: "inventory/item/care"%>
+
+<%= render partial: "inventory/item/invoices"%>
+
+<%= render partial: "inventory/item/warranty"%>
+
+
+<script type="text/template" id="item-save-template">
+  <div class="form-group">
+    <div class="col-xs-12">
+      <button type="submit" name="commit" class="btn btn-primary col-xs-12 col-sm-4" id="btn-save-item">SAVE</button>
+      <button type="button" name="commit" class="btn btn-default col-xs-12 col-sm-4 pull-right" data-dismiss="modal" aria-hidden="true">CANCEL</button>
+    </div>
+  </div>
+
+  <div class="form-group" id="item-save-progress" style="display:none;">
+    <div class="col-xs-12 text-center">
+      <img src="<%= asset_url("spinner.gif") %>" border="0" class="progress-spinner"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="alert" id="item-feedback"></div>
+  </div>
+</script>
+
+<script type="text/template" id="new-item-failed-template">
+  <div class="col-xs-12 text-center">
+    <div class="alert alert-danger" id="failed-new-item-container">
+      Failed to create a new item. Please <a href="">try again</a>.
+      <br/>
+      If this problem persists, please contact us at
+      <a href="mailto:support@housepadapp.com">support@HousepadApp.com</a>.
+    </div>
+  </div>
+</script>
+
+<script type="text/javascript">
+    function load_new_item_popup_data(init_data){
+        var Models = HousePad.TradeApp.module("Models");
+        var selected_conditions = [];
+        var selected_periods = [];
+        var current_measurements = [];
+
+        // Create
+        <% if @item.nil? %>
+        var inventory_item = new Models.InventoryItem({
+            house_id: parseInt("<%= params[:house_id] %>"),
+            room_id: parseInt("<%= params[:id] %>")
+        });
+        // Edit
+        <% else %>
+        var inventory_item = new Models.InventoryItem(<%= @item.to_json.html_safe %>);
+
+        <% if params[:token] %>
+        inventory_item.set("token", inventory_item.get("authentication_token"));
+        inventory_item.set("edit_with_token", true);
+        <% end %>
+
+        var images_collection = new Models.InventoryImages(inventory_item.get("inventory_images"));
+        inventory_item.set("inventory_images", images_collection);
+
+        // Categories
+        var categories_collection = new Models.InventoryCategories(inventory_item.get("inventory_categories"));
+        inventory_item.set("inventory_categories", categories_collection);
+
+        // Conditions
+        selected_conditions = inventory_item.get("inventory_conditions")
+        var selectedConditionsModel = new Models.InventoryConditions(selected_conditions);
+        inventory_item.set("inventory_conditions", selectedConditionsModel);
+
+        // Periods
+        selected_periods = inventory_item.get('inventory_periods');
+        var selectedPeriodsModel = new Models.InventoryPeriods(selected_periods);
+        inventory_item.set('inventory_periods', selectedPeriodsModel);
+
+        // Saved measurements
+        current_measurements = inventory_item.get('inventory_dimensions');
+        var selectedMeasurementsModel = new Models.InventoryMeasurements(current_measurements);
+        inventory_item.set('inventory_dimensions', selectedMeasurementsModel);
+
+        var care_docs = new Models.InventoryDocuments(inventory_item.get("inventory_care_docs"));
+        inventory_item.set("inventory_care_docs", care_docs);
+
+        var warranty_docs = new Models.InventoryDocuments(inventory_item.get("inventory_warranty_docs"));
+        inventory_item.set("inventory_warranty_docs", warranty_docs);
+
+        var invoice_docs = new Models.InventoryDocuments(inventory_item.get("inventory_invoice_docs"));
+        inventory_item.set("inventory_invoice_docs", invoice_docs);
+        <% end %>
+
+        var selector_categories = new Models.InventoryCategoriesSelector({
+            categories: <%= @categories.to_json.html_safe %>,
+            selected_categories: []
+        });
+
+        var conditions_selector = new Models.InventoryConditionsSelector({
+            conditions: <%= @conditions.to_json.html_safe %>,
+            selected_conditions: selected_conditions,
+            condition_description: inventory_item.get('condition_description')
+        });
+
+        var periods_selector = new Models.InventoryPeriodsSelector({
+            periods: <%= @periods.to_json.html_safe %>,
+            selected_periods : selected_periods,
+            period_description: inventory_item.get('period_description')
+        });
+
+        var measurements_selector = new Models.InventoryMeasurement({
+            measurements: <%= @measurements.to_json.html_safe %>,
+            current_measurements: current_measurements,
+        });
+
+        init_data['inventory_item'] = inventory_item;
+        init_data['categories'] = selector_categories;
+        init_data['conditions'] = conditions_selector;
+        init_data['periods'] = periods_selector;
+        init_data['measurements'] = measurements_selector;
+
+        return init_data;
+    }
+</script>

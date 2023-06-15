@@ -1,0 +1,235 @@
+<script type="text/template" id="edit-inventory-item-template">
+  <div>
+    <div class="col-xs-12">
+        <div class="row page-header-text">
+          <div class="col-xs-6">
+            <span class="page-title">EDIT ITEM</span>
+          </div>
+        </div>
+    </div>
+
+    <!--Vendor-->
+    [% if (is_vendor && request_owner) { %]
+    <div class="form-group">
+      <div class="col-sm-10 col-sm-push-1 horizontal">
+        <div class="text-justify">
+          <h4> <strong>[%= request_owner %]</strong> has sent you a request for item information</h4>
+          [% if(request_description) { %]
+            <div>
+              <mark>
+                [%= request_description %]
+              </mark>
+            </div>
+          [% } %]
+        </div>
+      </div>
+    </div>
+    [% } %]
+
+    <div class="col-sm-10 col-sm-push-1 horizontal">
+      <form class="form form-horizontal" role="form" id="item-form">
+        <div id="accordion" class="accordion horizontal">
+          <div class="row" id="item-title-container"></div>
+
+            <!-- List all the sections -->
+            [% _.each(requested_item_sections, function(section) {  %]
+            <h3> [%= section.position %]. [%= section.name %] <span class='[%= section.required ? "required" : "hidden" %]'>*</span></h3>
+            <div class="hidden">
+              [% if (section['hasDouble']) { %]
+                  <div class="row" id="item-list-[%= section.identifier %]-container"></div>
+                  <div class="row" id="item-add-[%= section.identifier %]-container"></div>
+              [% } else { %]
+                <div class="row" id="item-[%= section.identifier %]-container"></div>
+              [% } %]
+            </div>
+            [% }) %]
+
+          <div class="row" id="item-save-container"></div>
+        </div>
+      </form>
+    </div>
+  </div>
+</script>
+
+<script type="text/template" id="item-title-template">
+  <div class="form-group">
+    <div class="col-xs-12">
+      [% if (typeof(title) != 'undefined') { %]
+      <input type="text" name="inventory_item[title]" id="item-title" class="form-control" placeholder="Enter item title" value="[%=  title  %]">
+      [% } else { %]
+      <input type="text" name="inventory_item[title]" id="item-title" class="form-control" placeholder="Enter item title">
+      [% } %]
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-xs-12">
+      <textarea name="inventory_item[description]" id="item-description" class="form-control"
+                placeholder="Enter item description" rows="3">[%= typeof(description) != "undefined" ? description : "" %]</textarea>
+    </div>
+  </div>
+</script>
+
+<%= render partial: "inventory/item/images" %>
+
+<%= render partial: "inventory/item/categories" %>
+
+<%= render partial: "inventory/item/conditions" %>
+
+<%= render partial: "inventory/item/periods" %>
+
+<%= render partial: "inventory/item/measurements" %>
+
+<%= render partial: "inventory/item/care" %>
+
+<%= render partial: "inventory/item/invoices" %>
+
+<%= render partial: "inventory/item/warranty" %>
+
+<%= render partial: "inventory/item/provenance" %>
+
+<%= render partial: "inventory/item/materials" %>
+
+<%= render partial: "inventory/item/review" %>
+
+<script type="text/template" id="item-save-template">
+  <div class="form-group">
+    <div class="col-xs-12">
+      [% if (is_vendor) { %]
+        <button type="submit" name="commit" class="btn btn-primary col-xs-12
+        col-sm-4 pull-right" id="btn-save-review-item">SAVE AND SEND BACK</button>
+      [% } else { %]
+      <button type="submit" name="commit" class="btn btn-primary col-xs-12 col-sm-4 pull-right" id="btn-save-item">SAVE</button>
+      [% } %]
+    </div>
+  </div>
+
+  <div class="form-group" id="item-save-progress" style="display:none;">
+    <div class="col-xs-12 text-center">
+      <img src="<%= asset_url("spinner.gif") %>" border="0" class="progress-spinner"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="alert text-center" id="item-feedback"></div>
+  </div>
+</script>
+
+<script type="text/template" id="new-item-failed-template">
+  <div class="col-xs-12 text-center">
+    <div class="alert alert-danger" id="failed-new-item-container">
+      Failed to create a new item. Please <a href="">try again</a>.
+      <br/>
+      If this problem persists, please contact us at
+      <a href="mailto:support@housepadapp.com">support@HousepadApp.com</a>.
+    </div>
+  </div>
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        var Models = HousePad.TradeApp.module("Models");
+        var selected_conditions = [];
+        var selected_periods = [];
+        var current_measurements = [];
+        var current_materials = [];
+
+        // Create
+        <% if @item.nil? %>
+        var inventory_item = new Models.InventoryItem({
+            house_id: parseInt("<%= params[:project] %>"),
+            room_id: parseInt("<%= params[:room] %>"),
+            requested_item_sections : <%= @all_available_sections.to_json.html_safe %>,
+            request_owner: null,
+            is_vendor: null,
+        });
+
+        // Edit
+        <% else %>
+        var inventory_item = new Models.InventoryItem(<%= @item.to_json.html_safe %>);
+
+        <% if params[:token] %>
+        inventory_item.set("token", inventory_item.get("authentication_token"));
+        inventory_item.set("edit_with_token", true);
+        inventory_item.set("request_owner", <%= request_owner.to_json.html %>);
+        <% end %>
+
+        var images_collection = new Models.InventoryImages(inventory_item.get("inventory_images"));
+        inventory_item.set("inventory_images", images_collection);
+
+        // Categories
+        var categories_collection = new Models.InventoryCategories(inventory_item.get("inventory_categories"));
+        inventory_item.set("inventory_categories", categories_collection);
+
+        // Materials
+        var materials_collection = new Models.InventoryMaterials(inventory_item.get("inventory_materials"));
+        inventory_item.set("inventory_materials", materials_collection);
+
+        // Conditions
+        selected_conditions = inventory_item.get("inventory_conditions")
+        var selectedConditionsModel = new Models.InventoryConditions(selected_conditions);
+        inventory_item.set("inventory_conditions", selectedConditionsModel);
+
+        // Periods
+        selected_periods = inventory_item.get('inventory_periods');
+        var selectedPeriodsModel = new Models.InventoryPeriods(selected_periods);
+        inventory_item.set('inventory_periods', selectedPeriodsModel);
+
+        // Saved measurements
+        current_measurements = inventory_item.get('inventory_dimensions');
+        var selectedMeasurementsModel = new Models.InventoryMeasurements(current_measurements);
+        inventory_item.set('inventory_dimensions', selectedMeasurementsModel);
+
+        var care_docs = new Models.InventoryDocuments(inventory_item.get("inventory_care_docs"));
+        inventory_item.set("inventory_care_docs", care_docs);
+
+        var provenance_docs = new Models.InventoryDocuments(inventory_item.get("inventory_provenance_docs"));
+        inventory_item.set("inventory_provenance_docs", provenance_docs);
+
+        var warranty_docs = new Models.InventoryDocuments(inventory_item.get("inventory_warranty_docs"));
+        inventory_item.set("inventory_warranty_docs", warranty_docs);
+
+        var invoice_docs = new Models.InventoryDocuments(inventory_item.get("inventory_invoice_docs"));
+        inventory_item.set("inventory_invoice_docs", invoice_docs);
+        <% end %>
+
+        var selector_categories = new Models.InventoryCategoriesSelector({
+            categories: <%= @categories.to_json.html_safe %>,
+            selected_categories: []
+        });
+
+        /*  Materials */
+        var selector_materials = new Models.InventoryMaterialsSelector({
+            materials: <%= @materials.to_json.html_safe %>,
+            selected_materials: []
+        });
+
+        var conditions_selector = new Models.InventoryConditionsSelector({
+            conditions: <%= @conditions.to_json.html_safe %>,
+            selected_conditions: selected_conditions,
+            condition_description: inventory_item.get('condition_description')
+        });
+
+        var periods_selector = new Models.InventoryPeriodsSelector({
+            periods: <%= @periods.to_json.html_safe %>,
+            selected_periods: selected_periods,
+            period_description: inventory_item.get('period_description')
+        });
+
+        var measurements_selector = new Models.InventoryMeasurement({
+            measurements: <%= @measurements.to_json.html_safe %>,
+            current_measurements: current_measurements,
+        });
+
+        var init_data = {};
+        init_data['inventory_item'] = inventory_item;
+        init_data['categories'] = selector_categories;
+        init_data['conditions'] = conditions_selector;
+        init_data['periods'] = periods_selector;
+        init_data['measurements'] = measurements_selector;
+        init_data['materials'] = selector_materials;
+
+        HousePad.TradeApp.start(init_data);
+        HousePad.TradeApp.module("Inventory.Item.Edit").start();
+    });
+</script>

@@ -1,0 +1,69 @@
+<script type="text/template" id="breadcrumbs-template">
+  <div class="row">
+    <div class="col-xs-12 breadcrumbs">
+      <div class="col-xs-12">
+        <div class="breadcrumbs-root btn-group">
+          <button class="btn btn-link">
+            <a href="/trade/clients" data-no-turbolink="true">Clients</a>
+          </button>
+        </div>
+        <!--Clients-->
+        <div class="btn-group">
+          <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            [%= items.selected_client.first_name + ' ' + items.selected_client.last_name %]
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            [% _.each(items.other_clients, function(item) { %]
+            <li>
+              <a href="/trade/clients/[%= item.id %]" data-no-turbolink="true">
+                [%= item.first_name + ' ' + item.last_name %]
+              </a>
+            </li>
+            [% }); %]
+          </ul>
+        </div>
+        <!--Houses-->
+        <div class="btn-group">
+          <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            [%= items.selected_house.name %] <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="/trade/inventory" data-no-turbolink="true">
+                All
+              </a>
+            </li>
+            [% _.each(items.selected_client.houses, function(item) { %]
+            <li>
+              <a href="/trade/inventory?house=[%= item.id %]" data-no-turbolink="true">
+                [%= item.name %]
+              </a>
+            </li>
+            [% }); %]
+          </ul>
+        </div>
+        <!--Rooms-->
+        <div class="btn-group">
+          <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            [%= items.selected_house.selected_room.title %] <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="/trade/inventory?project=[%= items.selected_house.id %]" data-no-turbolink="true">
+                All rooms
+              </a>
+            </li>
+            [% _.each(items.selected_house.rooms, function(item) { %]
+            <li>
+              <a href="/trade/inventory?project=[%= items.selected_house.id %]&room=[%=item.id%]" data-no-turbolink="true">
+                [%= item.title %]
+              </a>
+            </li>
+            [% }); %]
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>

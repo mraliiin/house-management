@@ -1,0 +1,160 @@
+// Place all the styles related to the Home controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body, html {
+  height: 100%;
+}
+
+#header-container {
+  padding-top:5px;
+}
+
+.page-header-text {
+  padding-top: 30px;
+  padding-bottom: 20px;
+
+  .page-title {
+    width: auto;
+    padding: 8px 16px;
+    font-size: 15px;
+    font-weight: 200;
+    color: #fff;
+    background-color: #3f9ed4;
+    border-color: #3f9ed4;
+  }
+}
+
+.btn-new-client {
+  cursor: pointer;
+}
+
+.btn-new-home {
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+
+
+#main-container {
+  position: relative;
+  height: auto;
+  min-height: 100%;
+  box-shadow: 0 0 1em #E6E6E6;
+  padding: 0 20px;
+}
+
+#main-panel-container {
+  margin-bottom: 30px;
+}
+
+#footer-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+  font-size: 1.1em;
+}
+
+div.page-overlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: #000;
+  opacity: 0.8;
+  filter: alpha(opacity=60);
+  z-index:999;
+
+  img.progress-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+}
+
+img.progress-spinner {
+  height: 20px;
+}
+
+/*nav bar*/
+#nav-bar {
+  .container {
+    min-width: 290px !important;
+    width: 100%;
+  }
+
+  .navbar .nav.navbar-nav {
+    margin: 0;
+    width: 100%;
+  }
+
+  ul.nav.navbar-nav {
+    margin-top: 0;
+  }
+
+  .navbar {
+    background-color: #f8f8f9;
+    width: 100%;
+  }
+
+  .nav {
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  li {
+    float: left;
+    text-align: center;
+    width: 100%;
+  }
+
+  li:hover {
+    box-shadow: 0 0 1em #E6E6E6;
+  }
+
+  li + li {
+    border-top: 2px solid #fff;
+  }
+
+  @media(min-width:768px){
+    .nav {
+      width:100%;
+    }
+
+    li {
+      width: 33%;
+    }
+
+    li:last-child {
+      width: 34%;
+    }
+
+    .container {
+      padding-left:0;
+      padding-right:0;
+
+    }
+
+    li + li {
+      border-left: 2px solid #fff;
+      border-top: 0;
+    }
+  }
+}
+
+.table-zebra {
+  tr:nth-child(even) {
+    background-color: #F0F0F2;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #F9F9F9;
+  }
+
+  tr:hover td {
+    background-color: #E6E6E6;
+  }
+}

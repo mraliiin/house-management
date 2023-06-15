@@ -1,0 +1,138 @@
+<script type="text/template" id="inventory-request-info-template">
+  <form role="form" class="form form-horizontal" id="form-request-info">
+    <div class="form-group">
+      <div class="col-xs-12">
+        Enter the title of the item, the seller email and optionally a message to the seller.
+        You will be notified when they finish entering the requested information.
+      </div>
+    </div>
+
+    [% house_data = items.house_list_data %]
+    [% var selected_client = house_data.get('selected_client'); %]
+    <!-- Clients list-->
+    <div class="form-group">
+      <div class="col-xs-12" id="client_select_container">
+        <select class="form-control" name="client_id" id="client_selector">
+          [% if (selected_client) { %]
+          <option value="[%= selected_client.id%]" selected='selected'>
+            [%= selected_client.first_name + ' ' + selected_client.last_name %]
+          </option>
+          [% } else { %]
+          <option value="" selected='selected'> -</option>
+          [% } %]
+
+          [% _.each(items.house_list_data.get('other_clients'), function(client) { %]
+          <option value="[%=client.id%]">[%= client.first_name + ' ' + client.last_name %]</option>
+          [% }); %]
+        </select>
+      </div>
+    </div>
+
+    [% if (selected_client) { %]
+    [% var selected_house = selected_client.selected_house; %]
+    <!--Houses-->
+    <div class="form-group">
+      <div class="col-xs-12" id="home_select_container">
+        <select class="form-control" name="house_id" id="project_selector">
+          [% if(selected_house) { %]
+          <option value="[%=selected_house.id%]" selected='selected'>[%= selected_house.name %]</option>
+          [% } else { %]
+          <option value="" selected='selected'> -</option>
+          [% } %]
+
+          [% if (selected_client.other_houses.length > 0) { %]
+          [% _.each(selected_client.other_houses, function(house) { %]
+          <option value="[%=house.id%]">[%= house.name %]</option>
+          [% }); %]
+          [% } %]
+        </select>
+      </div>
+    </div>
+
+    <!-- Room list-->
+    [% if (selected_house) { %]
+    <div class="form-group">
+      <div class="col-xs-12">
+        <select class="form-control" name="room_id" id="room_id">
+          [% if(selected_house.selected_room) { %]
+          <option value="[%=selected_house.selected_room.id%]" selected='selected'>
+            [%=selected_house.selected_room.title %]
+          </option>
+          [% } else { %]
+          <option value="" selected='selected'> -</option>
+          [% } %]
+
+          [% if(selected_house.other_rooms.length > 0) {%]
+          [% _.each(selected_house.other_rooms, function(room) { %]
+          <option value="[%=room.id%]">[%= room.title %]</option>
+          [% }); %]
+          [% } %]
+        </select>
+      </div>
+    </div>
+    [% } %]
+    [% }%]
+
+    <div class="form-group">
+      <div class="col-xs-12">
+        <input type="text" id="request-info-title" name="title" class="form-control"
+               placeholder="Enter item title" value="[%= typeof(title) != 'undefined' ? title : '' %]">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-xs-12">
+        <input type="text" id="request-info-email" name="email" class="form-control"
+               placeholder="Enter seller email"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-xs-12">
+          <textarea id="request-info-message" name="description" class="form-control"
+                    placeholder="Enter a message for the seller" rows="3">[%= typeof(message) != 'undefined' ? message : '' %]</textarea>
+      </div>
+    </div>
+
+    <!--Load item sections here-->
+    [% item_sections = items.all_item_sections %]
+    <div class="col-xs-12" id="ddr_item_sections_container">
+      [% if (item_sections) { %]
+      <span id="showMoreBtn" class="btn-link pull-right" style="cursor:pointer">Show sections</span>
+
+      <div class="form-group" id="fieldsContainer" style="display:none">
+        <h5>Please provide the following:</h5>
+
+        <div class="row">
+          [% _.each(item_sections.models, function(item) { %]
+          <div class="col-xs-4 item-category">
+            <span>
+              <input type="checkbox" name="request_section" id="[%= item.get('id') %]">&nbsp;[%= item.get('name') %]
+            </span>
+          </div>
+          [% }); %]
+        </div>
+      </div>
+      [% }%]
+    </div>
+
+    <!--Feedback-->
+    <div class="form-group" id="request-info-progress" style="display:none;">
+      <div class="col-xs-12 text-center">
+        <img src="<%= asset_url('spinner.gif') %>" border="0" class="progress-spinner"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-xs-12 text-left">
+        <div class="alert" id="request-info-feedback"></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-xs-12 col-sm-6 pull-right">
+        <input type="submit" name="commit" value="Request Info" class="btn btn-primary col-xs-12 col-sm-6 pull-right" id="btn-request-info">
+      </div>
+    </div>
+  </form>
+</script>

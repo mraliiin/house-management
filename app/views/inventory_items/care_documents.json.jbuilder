@@ -1,0 +1,1 @@
+json.array! @item.attributes['inventory_care_docs']

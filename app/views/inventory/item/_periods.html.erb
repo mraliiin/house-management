@@ -1,0 +1,84 @@
+<!--List with available periods-->
+<script type="text/template" id="item-list-periods-template">
+  [% if (items.length > 0) { %]
+  <div class="form-group">
+    <h5 class="col-xs-12">Selected period</h5>
+
+    <div class="row">
+      [% _.each(items, function(item) { %]
+      <div class="col-xs-12 item-category">
+        <span class="col-xs-6">[%= item.name %]</span>
+        <div class="col-xs-6 delete-item-container text-right">
+          <button class="btn btn-xs btn-danger delete-item-period" data-id="[%= item.id %]">DEL</button>
+        </div>
+      </div>
+      [% }); %]
+    </div>
+  </div>
+  [% } %]
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="alert" style="display:none;margin-top:10px;" role="alert" id="item-periods-feedback"></div>
+    </div>
+  </div>
+</script>
+
+<script type="text/template" id="item-add-periods-template">
+  <div class="row">
+    [% if (periods != null && periods.length > 0) { %]
+    [% var current_period = null; %]
+
+    <div class="col-xs-6">
+      <div class="list-group">
+        [% _.each(periods, function(period) { var selected = false; %]
+        [% if (selected_periods.length > 0 && selected_periods[0].id == period.id) { %]
+        [% current_period = period; selected = true; %]
+        [% } %]
+        <button type="button" class="[%= (selected == true ? 'current-period' : '')%] list-group-item select-period"
+                data-id="[%= period.id %]" data-level="0">[%= period.name %]</button>
+        [% }); %]
+      </div>
+    </div>
+
+    <div class="col-xs-6">
+      <div class="list-group">
+         <textarea id="period_description" placeholder="Period description" class="form-control"
+               rows="4">[%= typeof(period_description) != "undefined" ? period_description : "" %]</textarea>
+      </div>
+    </div>
+
+    [% if (selected_periods.length > 0 && current_period != null) { %]
+    [% for (var i=0; i < selected_periods.length; i++){ %]
+    <div class="col-xs-12">
+      <div class="list-group">
+        [% _.each(current_period.descendants, function(period) { var selected = false; %]
+        [% if (selected_periods.length >(i+1) && selected_periods[i+1].id == period.id) { %]
+        [% current_period = period; selected = true; %]
+        [% } %]
+        <button type="button" class="[%= (selected == true ? 'current-period' : '')%] list-group-item select-period"
+                data-id="[%= period.id %]" data-level="[%= (i+1) %]">[%= period.name %]</button>
+        [% }); %]
+      </div>
+    </div>
+    [%      } %]
+    [%  } %]
+    [% } %]
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      [% if (selected_periods.length == 0) { %]
+      <button class="btn btn-primary btn-sm" id="save-period" disabled='disabled'>Add</button>
+      [% } else { %]
+      <button class="btn btn-primary btn-sm" id="save-period">Add</button>
+      [% } %]
+    </div>
+  </div>
+
+  <div class="row" style="padding-top:10px;">
+    <div class="col-xs-12">
+      <div class="alert" style="display:none;" role="alert" id="item-add-periods-feedback"></div>
+    </div>
+  </div>
+</script>

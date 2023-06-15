@@ -1,0 +1,64 @@
+<script type="text/template" id="inventory-index-template">
+  <div class="col-xs-12">
+    <div class="row breadcrumbs" style="margin-top:30px" id="inventory-breadcrumbs"></div>
+    <div class="row" id="inventory-filters-container"></div>
+    <div class="row" id="inventory-items-container"></div>
+  </div>
+  <div class="page-overlay" id="page-overlay">
+    <img src="<%= asset_url('spinner.gif') %>" border="0" class="progress-spinner"/>
+  </div>
+</script>
+
+<%= render partial: "inventory/inventory_items" %>
+
+<%= render partial: "inventory/inventory_filters" %>
+
+<%= render partial: "inventory/inventory_house_breadcrumbs" %>
+
+<script type="text/javascript">
+    $(function(){
+        var Models = HousePad.TradeApp.module("Models");
+
+        var inventory_items = new Models.InventoryItems(<%= @items.to_json.html_safe %>);
+        var filters = new Models.InventoryFilters(
+        {
+            // categories
+            categories: <%= @categories.to_json.html_safe %>,
+            selected_categories: <%= @selected_categories.to_json.html_safe %>,
+
+            // conditions
+            conditions: <%= @conditions.to_json.html_safe%>,
+            selected_conditions: <%= @selected_conditions.to_json.html_safe%>,
+
+            // periods
+            periods: <%= @periods.to_json.html_safe%>,
+            selected_periods: <%= @selected_periods.to_json.html_safe%>,
+            current:
+            {
+                house_id: "<%= params[:project] %>",
+                room_id: "<%= params[:room] %>",
+            },
+            selected_status : "<%= params[:state] %>",
+            doc_type : "<%= params[:doc_type] %>",
+        });
+
+        var inventory_breadcrumb_data = new Models.TradeClient(<%= @inventory_breadcrumb_data.to_json.html_safe %>);
+        filters.set("inventory_breadcrumb_data", inventory_breadcrumb_data);
+
+        var init_data = {
+            inventory_items: inventory_items,
+            filters: filters,
+            current_user : get_current_user(<%= @user.to_json.html_safe %>)
+        };
+
+        HousePad.TradeApp.start(init_data);
+
+        //Start Inventory Index module
+        HousePad.TradeApp.module("Inventory.Index").start();
+
+        //Start routing
+        var IndexModule = HousePad.TradeApp.module("Inventory.Index");
+        HousePad.pageRouter = new IndexModule.Router();
+        Backbone.history.start({pushState: true, hashChange: false, root: "/trade/"});
+    });
+</script>

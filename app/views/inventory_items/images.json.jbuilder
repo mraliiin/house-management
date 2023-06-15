@@ -1,0 +1,1 @@
+json.array! @item.inventory_images
